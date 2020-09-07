@@ -12,12 +12,12 @@
 #include <time.h>
 
 class bool_source{
-    public:
-        bool_source(double p = 0.5);
-        bool query() const;
+public:
+    bool_source(double p = 0.5);
+    bool query() const;
 
-    private:
-        double probability;
+private:
+    double probability;
 };
 
 bool_source::bool_source(double p){
