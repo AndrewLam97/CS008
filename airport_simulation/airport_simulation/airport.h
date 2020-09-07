@@ -5,8 +5,8 @@
  * Notes: Landings prioritized over takeoffs
  */
 
-#ifndef AIRPORT
-#define AIRPORT
+#ifndef AIRPORT_H
+#define AIRPORT_H
 #include "../../!includes/queue/queue.h"
 #include "runway.h"
 #include "plane.h"
@@ -15,11 +15,11 @@
 class airport{
 public:
     //DEBUG FLAG
-    bool const debug = true;
+    bool const debug = false;
 
     airport(unsigned int takeoff_time, double takeoff_probability, unsigned int landing_time, 
         double landing_probability, unsigned int fuel_limit, unsigned int total_time);
-    void simulate();
+    void simulate(); //simulation fnc
 private:
     unsigned int takeoff_time;
     double takeoff_probability;
@@ -31,6 +31,7 @@ private:
     unsigned int current_time = 1;
 };
 
+//Ctor
 airport::airport(unsigned int takeoff_time, double takeoff_probability, unsigned int landing_time, 
 double landing_probability, unsigned int fuel_limit, unsigned int total_time){
     this->takeoff_time = takeoff_time;
@@ -41,12 +42,13 @@ double landing_probability, unsigned int fuel_limit, unsigned int total_time){
     this->total_time = total_time;
 }
 
+//Simulation fnc
 void airport::simulate(){
     averager avg;
     queue<plane> landing_queue, takeoff_queue;
     runway runway1(landing_time);
     bool_source landing_source(landing_probability), takeoff_source(takeoff_probability);
-    unsigned int next_timestamp;
+    unsigned int next_timestamp; //holds temp timestamp
 
     //Initial Values
     cout << "____________________________________________________" << endl << "INITIAL VALUES" << endl;
@@ -54,6 +56,8 @@ void airport::simulate(){
     cout << "Probability of plane arrival into takeoff queue: " << takeoff_probability << endl;
     cout << "Time to land a plane: " << landing_time << endl;
     cout << "Probability of plane arrival into landing queue: " << landing_probability << endl;
+    cout << "Fuel: " << fuel_limit << endl;
+    cout << "Simulation time: " << total_time << endl;
     cout << "____________________________________________________" << endl;
     if(debug){
         cout << "DEBUG" << endl;
@@ -63,12 +67,14 @@ void airport::simulate(){
     }
 
     for(current_time = 1; current_time <= total_time; ++current_time){
-        if(landing_source.query()){ //Plane arrival for landing
+         //Plane arrival for landing
+        if(landing_source.query()){
             plane temp_plane(current_time);
             landing_queue.push(temp_plane);
             if(debug) cout << endl << ">>Pushed plane into landing queue with timestamp " << temp_plane.getTimestamp() << endl;
         }
-        if(takeoff_source.query()){ //Plane arrival for takeoff
+        //Plane arrival for takeoff
+        if(takeoff_source.query()){ 
             plane temp_plane(current_time);
             takeoff_queue.push(temp_plane);
             if(debug) cout << endl << ">>Pushed plane into takeoff queue with timestamp " << temp_plane.getTimestamp() << endl;
@@ -107,4 +113,4 @@ void airport::simulate(){
     avg.print_results(landing_queue.getSize(), takeoff_queue.getSize());
 }
 
-#endif // AIRPORT
+#endif // AIRPORT_H

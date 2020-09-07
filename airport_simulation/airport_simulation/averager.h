@@ -5,8 +5,8 @@
  * Notes: Crashed planes counted during simulation time, posthumous crashes calculated after simulation time
  */
 
-#ifndef AVERAGER
-#define AVERAGER
+#ifndef AVERAGER_H
+#define AVERAGER_H
 
 class averager{
 public:
@@ -46,4 +46,4 @@ void averager::print_results(int landing_size, int takeoff_size){
 
 }
 
-#endif // AVERAGER
+#endif // AVERAGER_H

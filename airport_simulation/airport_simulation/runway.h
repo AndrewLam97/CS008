@@ -5,8 +5,8 @@
  * Notes: Advances one tick at a time, dependent on busy boolean
  */
 
-#ifndef RUNWAY
-#define RUNWAY
+#ifndef RUNWAY_H
+#define RUNWAY_H
 #include <cassert>
 class runway{
 public:
@@ -20,6 +20,7 @@ private:
     unsigned int time_left;
 };
 
+//Ctor
 runway::runway(unsigned int time_reserved){
     this->time_reserved = time_reserved;
     time_left = 0;
@@ -47,4 +48,4 @@ void runway::set_time(unsigned int newtime){
     time_reserved = newtime;
 }
 
-#endif // RUNWAY
+#endif // RUNWAY_H

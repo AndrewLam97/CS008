@@ -5,8 +5,8 @@
  * Notes: 
  */
 
-#ifndef PLANE
-#define PLANE
+#ifndef PLANE_H
+#define PLANE_H
 
 class plane{
 public:
@@ -19,6 +19,7 @@ private:
     unsigned int fuel;
 };
 
+//Ctor
 plane::plane(unsigned int timestamp){
     this->timestamp = timestamp;
 }
@@ -31,4 +32,4 @@ void plane::setCrash(bool status){
     crashed = status;
 }
 
-#endif // PLANE
+#endif // PLANE_H

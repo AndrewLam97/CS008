@@ -5,8 +5,8 @@
  * Notes: 
  */
 
-#ifndef BOOL_SOURCE
-#define BOOL_SOURCE
+#ifndef BOOL_SOURCE_H
+#define BOOL_SOURCE_H
 #include <cassert>
 #include <cstdlib>
 #include <time.h>
@@ -31,4 +31,4 @@ bool bool_source::query() const {
     return (rand() < probability * RAND_MAX);
 }
 
-#endif // BOOL_SOURCE
+#endif // BOOL_SOURCE_H

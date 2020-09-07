@@ -21,6 +21,5 @@ int main(){
 
     a.simulate();
 
-
     return 0;
 }
