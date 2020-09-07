@@ -1,7 +1,7 @@
 /*
  * Author: Andrew Lam
  * Project: Airport Simulation
- * Purpose: 
+ * Purpose: Plane class contains enqueue timestamp and crash status
  * Notes: 
  */
 

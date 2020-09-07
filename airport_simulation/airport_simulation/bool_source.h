@@ -1,7 +1,7 @@
 /*
  * Author: Andrew Lam
  * Project: Airport Simulation
- * Purpose: 
+ * Purpose: Provides a class that uses rand() to determine if a new plane is enqueued
  * Notes: 
  */
 
@@ -20,10 +20,10 @@ private:
     double probability;
 };
 
-bool_source::bool_source(double p){
+bool_source::bool_source(double p){ //validate entered probability
     assert(p>=0 && "Probability less than 0");
     assert(p<=1 && "Probability greater than 1");
-    srand(time(NULL));
+    srand(time(NULL)); //seed rand()
     probability = p;
 }
 

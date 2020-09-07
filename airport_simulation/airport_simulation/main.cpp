@@ -15,7 +15,7 @@ int main(){
     unsigned int landing_time = 5;
     double landing_probability = 0.1;
     unsigned int fuel_limit = 20;
-    unsigned int total_time = 1440;
+    unsigned int total_time = 100000;
 
     airport a(takeoff_time, takeoff_probability, landing_time, landing_probability, fuel_limit, total_time);
 

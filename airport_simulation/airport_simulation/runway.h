@@ -1,8 +1,8 @@
 /*
  * Author: Andrew Lam
  * Project: Airport Simulation
- * Purpose: 
- * Notes: 
+ * Purpose: Runway class implements an in-use timer and status
+ * Notes: Advances one tick at a time, dependent on busy boolean
  */
 
 #ifndef RUNWAY
@@ -25,6 +25,7 @@ runway::runway(unsigned int time_reserved){
     time_left = 0;
 }
 
+//Start runway "timer"
 void runway::start(){
     assert(!is_busy() && "runway already in use");
     time_left = time_reserved;
@@ -34,12 +35,14 @@ bool runway::is_busy() const {
     return (time_left > 0);
 }
 
+//Advance runway "timer" one tick
 void runway::advance(){
     if(is_busy()){
         --time_left;
     }
 }
 
+//Update runway usage time
 void runway::set_time(unsigned int newtime){
     time_reserved = newtime;
 }

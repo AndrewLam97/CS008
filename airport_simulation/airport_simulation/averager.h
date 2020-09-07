@@ -1,8 +1,8 @@
 /*
  * Author: Andrew Lam
  * Project: Airport Simulation
- * Purpose: 
- * Notes: 
+ * Purpose: Averager collects runway and queue statistics, calculates averages, prints results to console
+ * Notes: Crashed planes counted during simulation time, posthumous crashes calculated after simulation time
  */
 
 #ifndef AVERAGER
@@ -34,10 +34,11 @@ void averager::add_wait_landing(unsigned int t){
 }
 
 void averager::print_results(int landing_size, int takeoff_size){
-    cout << endl << "______________________" << endl;
+    cout << endl << "____________________________________________________" << endl;
+    cout << "RESULTS" << endl;
     cout << total_landing << " landed" << endl;
     cout << total_takeoff << " took off" << endl;
-    cout << total_crash << " crashed :(" << endl;
+    cout << total_crash << " crashed" << endl;
     cout << "Average waiting time to land: " << total_wait_landing / total_landing << endl;
     cout << "Average waiting time to takeoff: " << total_wait_takeoff / total_takeoff << endl;
     cout << "Planes in landing queue: " << landing_size << endl;
