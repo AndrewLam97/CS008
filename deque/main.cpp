@@ -10,6 +10,11 @@ using namespace std;
 
 int main(){
     //test_deque_push();
-    test_deque_pop();
+    //test_deque_pop();
+    //test_deque_copy();
+    //test_deque_pop_empty();
+    //test_deque_getFront_empty();
+    //test_deque_size();
+    test_deque();
     return 0;
 }

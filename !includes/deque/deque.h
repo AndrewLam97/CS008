@@ -51,6 +51,11 @@ template <typename T>
 deque<T>::deque(const deque& other){
     //call a function to copy other into this object.
     _front = copy_list(_front, other._front);
+    // node<T>* walker = _front;
+    // while(walker->_next == nullptr){
+    //     walker = walker->_next;
+    // }
+    // _rear = walker;
 }
 template <typename T>
 deque<T>& deque<T>::operator=(const deque& rhs){
@@ -129,13 +134,15 @@ T deque<T>::popRear(){
     assert(!empty() && "queue: empty object cannot be popped.");
     T tempItem = _rear->_item;
     if(_front == _rear){
-        delete _front, _rear;
+        //delete _front, _rear;
         _front = _rear = nullptr;
     }
     else{
         node<T>* temp = _rear;
         _rear = _rear->_prev;
+
         _rear->_next = nullptr;
+        
         delete temp;
     }
     size--;
@@ -190,13 +197,88 @@ void test_deque_push(){
 }
 
 void test_deque_pop(){
-    cout<<"deque: pushing 0..9 into deque: "<< endl;
+    cout<<"testing deque pop: pushing 0..9 into deque: "<< endl;
     deque<int> dq;
     for (int i= 0; i<10; i++){
         dq.pushRear(i);
     }
     cout << dq << endl;
-    cout << "Popped Front [" << dq.popFront() << "]" << " New Deque: " << dq << endl;
-    cout << "Popped Rear [" << dq.popRear() << "]" << " New Deque: " << dq << endl;
+    while (!dq.empty()){
+        cout << "{ " << dq.popRear() << " } " << dq << endl;
+    }
+
+
+}
+
+void test_deque_copy(){
+    cout << "deque: testing copy constructor: " << endl;
+    deque<int> dq;
+    for(int i = 0; i<5; i++){
+        dq.pushRear(i);
+    }
+    deque<int> dq1 = dq;
+    cout << "Origingal deque: " << dq << endl;
+    cout << "Copied deque: " << dq1 << endl;
+}
+void test_deque_pop_empty(){
+    cout<<"deque: popping empty deque"<<endl;
+    deque<int> dq;
+    dq.popRear();
+}
+void test_deque_getFront_empty(){
+    cout<<"deque: top of an empty deque."<<endl;
+    deque<int> dq;
+    cout<<dq.getFront()<<endl;;
+}
+void test_deque_size(){
+    deque<int> dq;
+    for(int i = 0; i<5; i++){
+        dq.pushRear(i);
+    }
+    deque<int> dq1(dq);
+    cout << "dq: " << dq << endl;
+    cout << "dq size: " << dq.getSize() << endl;
+    cout << "Popping dq..." << endl;
+    dq.popFront();
+    cout << "dq: " << dq << endl;
+    cout << "dq size: " << dq.getSize() << endl;
+    cout << "dq1: " << dq1 << endl;
+    cout << "dq1 size: " << dq1.getSize() << endl;
+    dq1 = dq;
+    cout << "Copied dq to dq1... " << endl; 
+    cout << "dq1: " << dq1 << endl;
+    cout << "dq1 size: " << dq1.getSize();
+}
+void test_deque(){
+    deque<int> dq;
+    cout << "Pushing 1..9 to Rear..." << endl;
+    for(int i = 1; i<10; i++){
+        dq.pushRear(i);
+    }
+    cout << dq << endl;
+    cout << "Pushing 0 to Front" << endl;
+    dq.pushFront(0);
+    cout << dq << endl;
+
+    cout << "Creating dq1 from dq using cctor..." << endl;
+    deque<int> dq1(dq);
+    cout << "dq: " << dq << endl;
+    cout << "dq1: " << dq1 << endl;
+
+    cout << "Popping dq from Rear..." << endl;
+    while (!dq.empty()){
+        cout << "{ " << dq.popRear() << " } " << dq << endl;
+    }
+
+    cout << "Assigning dq1 back to dq: " <<  endl;
+    dq = dq1;
+    cout << "dq: " << dq << endl;
+
+    cout << "Popping dq1 from Front..." << endl;
+    while (!dq1.empty()){
+        cout << "{ " << dq1.popFront() << " } " << dq1 << endl;
+    }
+
+   
 }
 #endif // DEQUE_H
