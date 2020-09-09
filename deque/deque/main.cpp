@@ -1,10 +1,10 @@
 /*
  * Author: Andrew Lam
  * Project: Deque
- * Purpose: 
+ * Purpose: Double ended queue from linked list functions
  * Notes: 
  */
-#include "../!includes/deque/deque.h"
+#include "../../!includes/deque/deque.h"
 #include <iostream>
 using namespace std;
 
