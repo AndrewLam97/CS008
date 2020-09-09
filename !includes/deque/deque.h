@@ -195,7 +195,6 @@ void test_deque_push(){
     dq.pushFront(123);
     cout << dq << endl;
 }
-
 void test_deque_pop(){
     cout<<"testing deque pop: pushing 0..9 into deque: "<< endl;
     deque<int> dq;
@@ -206,10 +205,7 @@ void test_deque_pop(){
     while (!dq.empty()){
         cout << "{ " << dq.popRear() << " } " << dq << endl;
     }
-
-
 }
-
 void test_deque_copy(){
     cout << "deque: testing copy constructor: " << endl;
     deque<int> dq;
@@ -278,7 +274,5 @@ void test_deque(){
     while (!dq1.empty()){
         cout << "{ " << dq1.popFront() << " } " << dq1 << endl;
     }
-
-   
 }
 #endif // DEQUE_H

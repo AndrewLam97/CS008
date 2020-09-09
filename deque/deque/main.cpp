@@ -16,5 +16,6 @@ int main(){
     //test_deque_getFront_empty();
     //test_deque_size();
     test_deque();
+    
     return 0;
 }
