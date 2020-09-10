@@ -47,5 +47,13 @@ private:
     int _pos;                       //current position in the string
     static int _table[MAX_ROWS][MAX_COLUMNS];
 };
+void make_table(int _table[MAX_ROWS][MAX_COLUMNS]){
+    memset(_table, -1, sizeof(_table[0][0] * MAX_ROWS * MAX_COLUMNS));
+}
+
+
+bool STokenizer::get_token(int start_state, string& token){
+
+}
 
 #endif // S_TOKENIZER
