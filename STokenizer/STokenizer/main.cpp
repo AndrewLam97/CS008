@@ -7,11 +7,12 @@
 
 #include <iostream>
 #include "s_tokenizer.h"
-#include "token.h"
-#include "cstring"
 using namespace std;
 
-int main(){
-    
+int main()
+{
+    STokenizer stk;
+    stk.test();
+
     return 0;
 }

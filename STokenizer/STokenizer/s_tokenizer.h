@@ -5,8 +5,8 @@
  * Notes: 
  */
 
-#ifndef S_TOKENIZER
-#define S_TOKENIZER
+#ifndef S_TOKENIZER_H
+#define S_TOKENIZER_H
 
 #include "token.h"
 #include "matrix_functions/matrix_functions.h"
@@ -34,6 +34,7 @@ public:
     //set a new string as the input string
     void set_string(char str[]);
 
+    void test();
 private:
     //create table for all the tokens we will recognize
     //                      (e.g. doubles, words, etc.)
@@ -41,19 +42,23 @@ private:
 
     //extract the longest string that match
     //     one of the acceptable token types
+    //return true until
     bool get_token(int start_state, string& token);
     //---------------------------------
     char _buffer[MAX_BUFFER];       //input string
     int _pos;                       //current position in the string
     static int _table[MAX_ROWS][MAX_COLUMNS];
 };
-void make_table(int _table[MAX_ROWS][MAX_COLUMNS]){
-    memset(_table, -1, sizeof(_table[0][0] * MAX_ROWS * MAX_COLUMNS));
+void STokenizer::make_table(int _table[][MAX_COLUMNS]){
+    //init_table(_table);
 }
-
 
 bool STokenizer::get_token(int start_state, string& token){
 
 }
 
-#endif // S_TOKENIZER
+void STokenizer::test(){
+
+}
+
+#endif // S_TOKENIZER_H
