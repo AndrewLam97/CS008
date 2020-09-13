@@ -9,13 +9,16 @@
 #define S_TOKENIZER_H
 
 #include "token.h"
-#include "matrix_functions/matrix_functions.h"
+#include <cstring>
 #include <string>
+#include <algorithm>
 #include <iostream>
 using namespace std;
 
 const int MAX_COLUMNS = 150;
 const int MAX_ROWS = 40;
+//const int MAX_COLUMNS = 10; TEST
+//const int MAX_ROWS = 5; TEST
 const int MAX_BUFFER = 2000;
 
 class STokenizer
@@ -35,6 +38,7 @@ public:
     void set_string(char str[]);
 
     void test();
+    void printTable();
 private:
     //create table for all the tokens we will recognize
     //                      (e.g. doubles, words, etc.)
@@ -49,16 +53,46 @@ private:
     int _pos;                       //current position in the string
     static int _table[MAX_ROWS][MAX_COLUMNS];
 };
+int STokenizer::_table[MAX_ROWS][MAX_COLUMNS];
+
+STokenizer::STokenizer(char str[]){
+    make_table(_table);
+    set_string(str);
+}
+
 void STokenizer::make_table(int _table[][MAX_COLUMNS]){
-    //init_table(_table);
+    for (int i = 0; i < MAX_ROWS; i++)
+    {
+        for (int j = 0; j < MAX_COLUMNS; j++)
+        {
+            _table[i][j] = -1;
+        }
+    }
+}
+void STokenizer::set_string(char str[]){
+    strcpy(_buffer, str);
 }
 
 bool STokenizer::get_token(int start_state, string& token){
 
 }
 
+//--------------------------------------------------------------------------
 void STokenizer::test(){
-
+    cout << _table[0][0] << endl;
 }
+
+void STokenizer::printTable(){
+    for (int i = 0; i < MAX_ROWS; i++)
+    {
+        for (int j = 0; j < MAX_COLUMNS; j++)
+        {
+            cout << "" << _table[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+
 
 #endif // S_TOKENIZER_H

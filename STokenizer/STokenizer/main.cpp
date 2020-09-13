@@ -11,8 +11,13 @@ using namespace std;
 
 int main()
 {
-    STokenizer stk;
-    stk.test();
-
+    cout << endl;
+    char buf[20] = "adfasdfsadfsa";
+    STokenizer stk(buf);
+    stk.printTable();
+    
+    
+    system("pause"); //View Terminal Output
     return 0;
+    
 }
