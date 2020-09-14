@@ -2,7 +2,7 @@
  * Author: Andrew Lam
  * Project: String Tokenizer
  * Purpose: Token Class
- * Notes: 
+ * Notes: Package to hold strings and their types extracted from the input buffer.
  */
 
 #ifndef TOKEN_H
