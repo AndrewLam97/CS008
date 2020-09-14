@@ -11,10 +11,20 @@ using namespace std;
 
 int main()
 {
-    cout << endl;
-    char buf[20] = "adfasdfsadfsa";
+    cout << "DEBUG TEST" << endl;
+    char buf[] = "it was the night of october 17th. pi was still 3.14.";
     STokenizer stk(buf);
-    stk.printTable();
+    Token t;
+    stk>>t;
+    while(stk.more()){
+        cout << t << endl;
+        t = Token();
+        stk>>t;
+    }
+    //cout << t;
+    
+
+    //stk.printTable();
     
     
     system("pause"); //View Terminal Output

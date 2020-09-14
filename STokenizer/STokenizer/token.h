@@ -7,7 +7,8 @@
 
 #ifndef TOKEN_H
 #define TOKEN_H
-#include "iostream"
+#include <iostream>
+#include <iomanip>
 using namespace std;
 
 class Token
@@ -17,7 +18,7 @@ public:
     Token(string str, int type);
     friend ostream &operator<<(ostream &outs, const Token &t)
     {
-        outs << t._typeStr << "     |" << t._tokenStr << "|";
+        outs << setw(10) << t._typeStr << setw(10) <<"|" << t._tokenStr << "|";
         return outs;
     }
     int type();
@@ -29,6 +30,13 @@ private:
     string _typeStr;
     string _tokenStr;
 };
+
+Token::Token(){
+    this->_token = "";
+    this->_type = -1;
+    this->_tokenStr = "NULL";
+    this->_typeStr = "NULL";
+}
 
 Token::Token(string str, int type)
 {
@@ -47,13 +55,13 @@ string Token::type_string()
     {
     case -1:
         return string("UNKNOWN");
-    case 0:
+    case 10:
         return string("PUNCTUATION");
-    case 1:
+    case 20:
         return string("ALPHA");
-    case 2:
+    case 30:
         return string("NUMBER");
-    case 3:
+    case 40:
         return string("SPACE");
     }
 }
