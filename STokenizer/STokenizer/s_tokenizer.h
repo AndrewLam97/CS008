@@ -1,7 +1,7 @@
 /*
  * Author: Andrew Lam
- * Project: String Tokenizer
- * Purpose: String Tokenizer Class
+ * Project: STokenizer
+ * Purpose: STokenizer Class
  * Notes: Returns a token via extraction operator from an input buffer according to
  *        rules set in an internal FSM.
  */

@@ -1,6 +1,6 @@
 /*
  * Author: Andrew Lam
- * Project: String Tokenizer
+ * Project: STokenizer
  * Purpose: Token Class
  * Notes: Package to hold strings and their types extracted from the input buffer.
  */
