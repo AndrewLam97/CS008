@@ -1,3 +1,9 @@
+/*
+ * Author: Andrew Lam
+ * Project: FTokenizer
+ * Purpose: Returns a token via extraction operator from an input file
+ * Notes: FTokenizer Class
+ */
 #ifndef F_TOKENIZER_H
 #define F_TOKENIZER_H
 #include <fstream>
@@ -37,7 +43,7 @@ private:
 
 FTokenizer::FTokenizer(char *fname)
 {
-    cout << "Reading: " << fname << endl;
+    cout << "Reading: " << fname << endl; //Display input file path
     _f.open(fname);
     if(!_f){
         cout << "Unable to open file...";
@@ -53,7 +59,7 @@ Token FTokenizer::next_token()
     //     get_new_block();
     //     _blockPos = 0;
     // }
-    if(!_stk.more()){
+    if(!_stk.more()){ //finished with current block
         get_new_block();
     }
     Token t;
@@ -66,16 +72,16 @@ Token FTokenizer::next_token()
 bool FTokenizer::get_new_block()
 {
     if(debug)cout << "Getting new block" << endl;
-    if(!_f.eof()){
-        _f.read(block_buf, MAX_BUFFER);
-        block_buf[_f.gcount()] = '\0';
+    if(!_f.eof()){ //Get block if not already at end of file
+        _f.read(block_buf, MAX_BUFFER); //read in block to char buffer
+        block_buf[_f.gcount()] = '\0'; //terminate char buffer
     }
-    if(debug)cout << "CURRENT_BUFFER: " << block_buf << endl;
+    if(debug)cout << "CURRENT_BUFFER: " << block_buf << endl; //display working buffer
     _stk = STokenizer(block_buf);
     //_stk.set_string(block_buf);
 }
 
-bool FTokenizer::more()
+bool FTokenizer::more() //if more file left to process
 {
     _more = !_f.eof();
     return _more;

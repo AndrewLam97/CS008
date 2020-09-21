@@ -1,8 +1,15 @@
+/*
+ * Author: Andrew Lam
+ * Project: FTokenizer
+ * Purpose: Returns a token via extraction operator from an input file
+ * Notes: main source file
+ */
 #include "FTokenizer.h"
 #include <cstring>
 #include <iostream>
 using namespace std;
 
+//test fnc
 void test_f_tokenize_simple(){
     Token t;
     FTokenizer ftk("C:/Users/Andrew/Documents/School/PCC/CS008/FTokenizer/FTokenizer/solitude.txt");
@@ -36,7 +43,7 @@ int main(){
             //    <<t.type_string()<<endl;
         }
         ftk>>t;
-        cout<<"Tokens Found: "<<token_count<<endl;
+        //cout<<"Tokens Found: "<<token_count<<endl;
     }
     cout<<"Tokens Found: "<<token_count<<endl;
     cout<<"=========="<<endl;
