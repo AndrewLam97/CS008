@@ -12,7 +12,7 @@ using namespace std;
 
 int main()
 {
-    char buf[] = "it was the night of october 17th. pi was still 3.14.";
+    char buf[] = "GABRIEL GARCIA MARQUEZ. ONE HUNDRED YEARS OF SOLITUDE (both available in Bard editions). García Márquez currently lives with his wife and children in Barcelona.";
     STokenizer stk(buf);
     Token t;
     stk>>t;

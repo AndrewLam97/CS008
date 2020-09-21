@@ -18,7 +18,7 @@ public:
     Token(string str, int type);
     friend ostream &operator<<(ostream &outs, const Token &t)
     {
-        outs << setw(10) << t._typeStr << setw(10) <<"|" << t._tokenStr << "|";
+        outs << setw(15) << t._typeStr << setw(15) <<"|" << t._tokenStr << "|";
         return outs;
     }
     int type();
@@ -53,6 +53,8 @@ string Token::type_string()
 {
     switch (_type)
     {
+    // case 0:
+    //     return string("UNKNOWN");
     case -1:
         return string("UNKNOWN");
     case 10:

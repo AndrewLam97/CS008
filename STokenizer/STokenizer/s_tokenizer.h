@@ -36,8 +36,15 @@ public:
         string temp_substr;
         int start_state = 0;
         s.get_token(start_state, temp_substr);
-        Token temp(temp_substr,_table[0][int(temp_substr[0])]); //create token with token substring and type
-        t = temp;
+        if(int(temp_substr[0])<0){
+            Token temp(temp_substr,-1);
+            t = temp;
+        }
+        else{
+            Token temp(temp_substr,_table[0][int(temp_substr[0])]); //create token with token substring and type        
+            t = temp;
+        }
+        
     }
 
     //set a new string as the input string
@@ -55,11 +62,16 @@ private:
     //return true until
     bool get_token(int start_state, string& token);
     //---------------------------------
-    char _buffer[MAX_BUFFER];       //input string
+    char _buffer[MAX_BUFFER+1];       //input string
     int _pos;                       //current position in the string
     static int _table[MAX_ROWS][MAX_COLUMNS];
 };
 int STokenizer::_table[MAX_ROWS][MAX_COLUMNS];
+
+STokenizer::STokenizer(){
+    make_table(_table);
+    _pos = 0;
+}
 
 STokenizer::STokenizer(char str[]){
     make_table(_table);
@@ -87,6 +99,16 @@ void STokenizer::make_table(int _table[][MAX_COLUMNS]){
     _table[0][int(',')] = 10;
     _table[0][int('?')] = 10;
     _table[0][int('!')] = 10;
+    _table[0][int(';')] = 10;
+    _table[0][39] = 10; // '
+    _table[0][int('"')] = 10;
+    _table[0][int('(')] = 10;
+    _table[0][int(')')] = 10;
+    _table[0][int('{')] = 10;
+    _table[0][int('}')] = 10;
+    _table[0][int('-')] = 10;
+    _table[0][int('&')] = 10;
+    _table[0][int(':')] = 10;
     //---ALPHAS---
     for(int i = int('A'); i <= int('Z'); i++){
         _table[0][i] = 20;
@@ -125,6 +147,9 @@ void STokenizer::make_table(int _table[][MAX_COLUMNS]){
     //STATE 40 - SPACES
     _table[40][int(' ')] = 40;
     _table[40][9] = 40;  //tab
+    _table[40][10] = 40; //new line
+    _table[40][11] = 40; //vertical tab
+    _table[40][12] = 40; //new page
     _table[40][13] = 40; //return
 
 }
@@ -137,6 +162,12 @@ bool STokenizer::get_token(int start_state, string& token){
     int pos_last_success = -1;
     int current_state = start_state; //pass starting state for FTokenizer
     while(_buffer[_pos]!= '\0' && current_state != -1){
+        if(int(_buffer[_pos]) < 0 || int(_buffer[_pos]>127)){ //unknown char
+            token.push_back(_buffer[_pos]);
+            pos_last_success = _pos; //
+            _pos++;
+            return !done();
+        }
         current_state = _table[current_state][int(_buffer[_pos])];
         if(_table[current_state][0] == 1){
             pos_last_success = _pos;
