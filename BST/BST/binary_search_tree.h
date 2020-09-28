@@ -6,7 +6,7 @@ template <typename T>
 class BST{
 public:
     BST();
-    BST(const T* sorted_list, int size=-1);
+    BST(const T* sorted_list, int size); //int size = -1
  
  //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
  
@@ -20,8 +20,14 @@ public:
     void erase(const T& target);
     bool search(const T& target, tree_node<T>* & found_ptr);
  
-    friend ostream& operator <<(ostream& outs, const BST<T>& tree);
+    friend ostream& operator <<(ostream& outs, const BST<T>& tree){
+        //tree_print(root, 0, outs);
+    }
     BST<T>& operator +=(const BST<T>& rhs);
+
+    tree_node<T>* getRoot(){
+        return root;
+    }
 private:
     tree_node<T>* root;
 };
@@ -32,7 +38,7 @@ BST<T>::BST(){
 }
 
 template <typename T> //sorted list ctor
-BST<T>::BST(const T* sorted_list, int size=-1){
+BST<T>::BST(const T* sorted_list, int size){
     root = tree_from_sorted_list(sorted_list, size);
 }
 
@@ -52,5 +58,25 @@ template <typename T>
 BST<T>::~BST(){
     tree_clear(root);
     root = nullptr;
+}
+
+template <typename T>
+void BST<T>::insert(const T& insert_me){
+    root = tree_insert(root, insert_me);
+}
+
+template <typename T>
+void BST<T>::erase(const T& target){
+    tree_erase(root, target);
+}
+
+template <typename T>
+bool BST<T>::search(const T& target, tree_node<T>* & found_ptr){
+    return search(target, found_ptr);
+}
+
+template <typename T>
+BST<T>& BST<T>::operator +=(const BST<T>& rhs){
+    tree_add(root, rhs);
 }
 #endif // BINARY_SEARCH_TREE

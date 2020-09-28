@@ -7,6 +7,7 @@
 #ifndef BST_FUNCTIONS_H
 #define BST_FUNCTIONS_H
 #include <iostream>
+#include <iomanip>
 #include <algorithm>
 #include <vector>
 using namespace std;
@@ -77,8 +78,8 @@ template <typename T>
 bool tree_search(tree_node<T>* root, const T& target, //if not found, set found_ptr to false and return false
                  tree_node<T>* &found_ptr);
 
-template<typename T> //postorder traversal
-void tree_print(tree_node<T>* root, int level=0, ostream& outs=cout);
+// template<typename T> //postorder traversal
+// void tree_print(tree_node<T>* root, int level=0, ostream& outs=cout);
 
 template<typename T>       //prints detailed info about each node
 void tree_print_debug(tree_node<T>* root, int level=0, 
@@ -122,13 +123,24 @@ tree_node<T>* tree_from_sorted_list(const T* a, int size);
 //  definitions:
 //--------------------------------------------------------------------
 template <typename T>
+tree_node<T>* new_node(T item){
+    tree_node<T>* temp = new tree_node<T>(item);
+    temp->_left = nullptr;
+    temp->_right = nullptr;
+    return temp;
+}
+
+template <typename T>
 tree_node<T>* tree_insert(tree_node<T>* &root, const T& insert_me){
     if(root == nullptr){
-        tree_node<T>* temp =  new tree_node<T>(insert_me, nullptr, nullptr);
-        return temp;
+        return new_node(insert_me);
     }
-    if(insert_me < root->_item) root->_left = tree_insert(root->_left, insert_me);
-    else root->_right = tree_insert(root->_right, insert_me);
+    if(insert_me < root->_item){
+        root->_left = tree_insert(root->_left, insert_me);
+    } 
+    else{
+        root->_right = tree_insert(root->_right, insert_me);
+    }
     return root;
 }
 
@@ -168,33 +180,53 @@ bool tree_search(tree_node<T>* root, const T& target, tree_node<T>* &found_ptr){
 	}
 }
 
-template<typename T>
-void tree_print(tree_node<T>* root, int level=0, ostream& outs=cout){ //postorder
-    if(root != nullptr){
-        if(root->_left){
-            tree_print(root->_left, level+3);
-        }
-        if(root->right){
-            tree_print(root->_right, level+3);
-        }
-        if(level){
-            outs << setw(level) << ' ';
-        }
-        cout << root->_item << endl;
+// template<typename T>
+// void tree_print(tree_node<T>* root, int level, ostream& outs){ //postorder
+//     if(root != nullptr){
+//         if(root->_left){
+//             tree_print(root->_left, level+3);
+//         }
+//         if(root->_right){
+//             tree_print(root->_right, level+3);
+//         }
+//         if(level){
+//             outs << setw(level) << ' ';
+//         }
+//         cout << root->_item << endl;
+//     }
+// }
+
+int COUNT = 10;
+template <typename T>
+void tree_print_util(tree_node<T>* root, int space){
+    if(root == nullptr){
+        return;
     }
+    space += COUNT;
+    tree_print_util(root->_right, space);
+    cout<<endl;  
+    for (int i = COUNT; i < space; i++)  
+        cout<<" ";  
+    cout<<root->_item<<endl;
+    tree_print_util(root->_left, space); 
+}
+
+template <typename T>
+void tree_print(tree_node<T>* root){
+    tree_print_util(root, 0);
 }
 
 template<typename T>
 void inorder_print(tree_node<T>* root){
     if(root != nullptr){
-        inorder(root->_left);
+        inorder_print(root->_left);
         cout << root->_item << " ";
-        inorder(root->_right);
+        inorder_print(root->_right);
     }
 }
 
 template<typename T>       //prints detailed info about each node
-void tree_print_debug(tree_node<T>* root, int level=0, ostream& outs=cout){
+void tree_print_debug(tree_node<T>* root, int level, ostream& outs){
     if(root != nullptr){
         if(root->_left){
             tree_print(root->_left, level+3);
@@ -214,7 +246,7 @@ void tree_clear(tree_node<T>* &root){
     if(root == nullptr){
         return;
     }
-    tree_clear(root->left);
+    tree_clear(root->_left);
     tree_clear(root->_right);
     delete root;
 }
@@ -262,14 +294,14 @@ tree_node<T>* minimum_node(tree_node<T>* root){
 
 template <typename T>       // sorted array -> tree
 tree_node<T>* tree_from_sorted_list(const T* a, int size){
-    return tree_from_sorted_list_helper(a, size, 0, size-1)
+    return tree_from_sorted_list_helper(a, size, 0, size-1);
 }
 
 template <typename T> //helper function using binary search
 tree_node<T>* tree_from_sorted_list_helper(const T* a, int size, int low, int high){
     if(low <= high){
         int mid = ((low + high) / 2) + low;
-        tree_node<T>* root = new tree_node(a[mid]);
+        tree_node<T>* root = new tree_node<T>(a[mid]);
         root->_left = tree_from_sorted_list_helper(a, low, mid-1);
         root->_right = tree_from_sorted_list_helper(a, mid+1, high);
         return root;
@@ -279,7 +311,7 @@ tree_node<T>* tree_from_sorted_list_helper(const T* a, int size, int low, int hi
 
 template <typename T>       //return copy of tree pointed to by root
 tree_node<T>* tree_copy(tree_node<T>* root){
-    ;
+    tree_node<T>* temp;
     if(root != nullptr){
         tree_node<T>* temp = new tree_node<T>;
         temp->_item = root->_item;
@@ -302,7 +334,7 @@ void inorder(tree_node<T>* root, tree_node<T>* prev){
 
 template <typename T>
 tree_node<T>* flatten(tree_node<T>* parent){
-    tree_node<T>* temp = new tree_node(-1);
+    tree_node<T>* temp = new tree_node<T>(-1);
     tree_node<T>* prev = temp;
 
     inorder(parent, prev);
@@ -333,12 +365,12 @@ void tree_add(tree_node<T>* & dest, const tree_node<T>* src){
         dVec.push_back(dWalker->_item);
         dWalker = dWalker->_right;
     }
-    while(SWalker != nullptr){
-        SVec.push_back(sWalker->_item);
+    while(sWalker != nullptr){
+        sVec.push_back(sWalker->_item);
         sWalker = sWalker->_right;
     }
     vector<T> mergedVec = mergesort_vectors(dWalker, sWalker);
-    tree_node<T>* ret = new tree_node;
+    tree_node<T>* ret = new tree_node<T>;
     for(auto i:mergedVec){
         tree_insert(ret,i);
     }
