@@ -8,6 +8,7 @@
 #define BST_FUNCTIONS_H
 #include <iostream>
 #include <algorithm>
+#include <vector>
 using namespace std;
 
 template <typename T>
@@ -70,7 +71,7 @@ struct tree_node{
 template <typename T>
 tree_node<T>* tree_insert(tree_node<T>* &root, const T& insert_me);
 
-template <typename T> //recursive
+template <typename T> //recursive/
 tree_node<T>* tree_search(tree_node<T>* root, const T& target);
 template <typename T>
 bool tree_search(tree_node<T>* root, const T& target, //if not found, set found_ptr to false and return false
@@ -84,7 +85,10 @@ void tree_print_debug(tree_node<T>* root, int level=0,
                                           ostream& outs=cout);
 
 template<typename T>
-void inorder(tree_node<T>* root); //inorder traversal
+void inorder_print(tree_node<T>* root); //inorder traversal print
+
+template <typename T>
+void inorder(tree_node<T>* root, tree_node<T>* prev);
 
 template <typename T>       //clear the tree, postorder traversal (left, right, root)
 void tree_clear(tree_node<T>* &root);
@@ -105,9 +109,14 @@ tree_node<T>* tree_copy(tree_node<T>* root);
 template <typename T>       //Add tree src to dest
 void tree_add(tree_node<T>* & dest, const tree_node<T>* src);
 
-
+template <typename T> //helper function using binary search
+tree_node<T>* tree_from_sorted_list_helper(const T* a, int size, int low, int high);
 template <typename T>       // sorted array -> tree
 tree_node<T>* tree_from_sorted_list(const T* a, int size);
+
+
+
+
 
 //--------------------------------------------------------------------
 //  definitions:
@@ -176,7 +185,7 @@ void tree_print(tree_node<T>* root, int level=0, ostream& outs=cout){ //postorde
 }
 
 template<typename T>
-void inorder(tree_node<T>* root){
+void inorder_print(tree_node<T>* root){
     if(root != nullptr){
         inorder(root->_left);
         cout << root->_item << " ";
@@ -249,5 +258,89 @@ tree_node<T>* minimum_node(tree_node<T>* root){
         root = root->_left;
     }
     return root;
+}
+
+template <typename T>       // sorted array -> tree
+tree_node<T>* tree_from_sorted_list(const T* a, int size){
+    return tree_from_sorted_list_helper(a, size, 0, size-1)
+}
+
+template <typename T> //helper function using binary search
+tree_node<T>* tree_from_sorted_list_helper(const T* a, int size, int low, int high){
+    if(low <= high){
+        int mid = ((low + high) / 2) + low;
+        tree_node<T>* root = new tree_node(a[mid]);
+        root->_left = tree_from_sorted_list_helper(a, low, mid-1);
+        root->_right = tree_from_sorted_list_helper(a, mid+1, high);
+        return root;
+    }
+    return nullptr;
+}
+
+template <typename T>       //return copy of tree pointed to by root
+tree_node<T>* tree_copy(tree_node<T>* root){
+    ;
+    if(root != nullptr){
+        tree_node<T>* temp = new tree_node<T>;
+        temp->_item = root->_item;
+        temp->_left = tree_copy(root->_left);
+        temp->_right = tree_copy(root->_right);
+    }
+    else return nullptr;
+    return temp;
+}
+
+template <typename T>
+void inorder(tree_node<T>* root, tree_node<T>* prev){
+    if(root == nullptr) return;
+    inorder(root->_left, prev);
+    prev->_left = nullptr;
+    prev->_right = root;
+    prev = root;
+    inorder(root->_right, prev);
+}
+
+template <typename T>
+tree_node<T>* flatten(tree_node<T>* parent){
+    tree_node<T>* temp = new tree_node(-1);
+    tree_node<T>* prev = temp;
+
+    inorder(parent, prev);
+
+    prev->_left = nullptr;
+    prev->_right = nullptr;
+    tree_node<T>* res = temp->_right;
+    delete temp;
+    return res;
+}
+
+template <typename T>
+vector<T> mergesort_vectors(vector<T> first, vector<T> second){
+    vector<T> mergedVec = first;
+    mergedVec.insert(mergedVec.end(), second.begin(), second.end());
+    sort(mergedVec);
+    return mergedVec;
+}
+
+template <typename T>       //Add tree src to dest
+void tree_add(tree_node<T>* & dest, const tree_node<T>* src){
+    vector<T> dVec;
+    vector<T> sVec;
+    tree_node<T>* dWalker = dest;
+    tree_node<T>* sWalker = src;
+
+    while(dWalker != nullptr){
+        dVec.push_back(dWalker->_item);
+        dWalker = dWalker->_right;
+    }
+    while(SWalker != nullptr){
+        SVec.push_back(sWalker->_item);
+        sWalker = sWalker->_right;
+    }
+    vector<T> mergedVec = mergesort_vectors(dWalker, sWalker);
+    tree_node<T>* ret = new tree_node;
+    for(auto i:mergedVec){
+        tree_insert(ret,i);
+    }
 }
 #endif // BST_FUNCTIONS_H

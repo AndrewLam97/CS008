@@ -4,7 +4,7 @@ using namespace std;
 
 //Driver Function
 void test_bst(){
-    BST bst;
+    
 
     char input;
     cout << "[R]andom  [I]nsert  [C]clear  [S]earch  [E]rase      e[X]it: ";
@@ -33,9 +33,6 @@ void test_bst(){
 }
 
 int main(){
-
-
-
     system("PAUSE");
     return 0;
 }

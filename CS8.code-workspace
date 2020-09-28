@@ -42,7 +42,9 @@
 			"xstring": "cpp",
 			"xtr1common": "cpp",
 			"xutility": "cpp",
-			"iomanip": "cpp"
+			"iomanip": "cpp",
+			"atomic": "cpp",
+			"string": "cpp"
 		}
 	}
 }
