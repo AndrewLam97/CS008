@@ -18,6 +18,7 @@ public:
  
     void insert(const T& insert_me);
     void erase(const T& target);
+    bool search(const T& target);
     bool search(const T& target, tree_node<T>* & found_ptr);
  
     friend ostream& operator <<(ostream& outs, const BST<T>& tree){
@@ -70,9 +71,15 @@ void BST<T>::erase(const T& target){
     tree_erase(root, target);
 }
 
+// template <typename T>
+// bool BST<T>::search(const T& target, tree_node<T>* & found_ptr){
+//     return tree_search(root, target, found_ptr);
+// }
+
 template <typename T>
-bool BST<T>::search(const T& target, tree_node<T>* & found_ptr){
-    return search(target, found_ptr);
+bool BST<T>::search(const T& target){
+    if(tree_search(root, target) != nullptr) return true;
+    else return false;
 }
 
 template <typename T>

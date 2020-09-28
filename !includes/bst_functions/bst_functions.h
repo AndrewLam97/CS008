@@ -95,7 +95,7 @@ template <typename T>       //clear the tree, postorder traversal (left, right, 
 void tree_clear(tree_node<T>* &root);
 
 template <typename T>       //erase target from the tree, 3 cases (0 children,1 child, 2 children)
-bool tree_erase(tree_node<T>*& root, const T& target);
+tree_node<T>* tree_erase(tree_node<T>*& root, const T& target);
 
 template <typename T>       //erase rightmost node from the tree
                             // store the item in max_value
@@ -146,7 +146,10 @@ tree_node<T>* tree_insert(tree_node<T>* &root, const T& insert_me){
 
 template <typename T>
 tree_node<T>* tree_search(tree_node<T>* root, const T& target){
-    if(root->_item == target || root==nullptr){ //base case when root == target or null
+    if(root == nullptr) {
+        return nullptr;
+    }
+    if(root->_item == target){ //base case when root == target or null
         return root;
     }
     else if(root->_item > target){ //root smaller than target
@@ -251,37 +254,64 @@ void tree_clear(tree_node<T>* &root){
     delete root;
 }
 
+// template <typename T>       //erase target from the tree, 3 cases (0 children,1 child, 2 children)
+// bool tree_erase(tree_node<T>*& root, const T& target){
+//     tree_node<T>* parent = nullptr;
+//     tree_node<T>* current = root;
+
+//     tree_search(current, target, parent);
+//     if(root == nullptr) return false;
+
+//     if(current->_left == nullptr && current->_right == nullptr){ //current = leaf
+//         if(current != root){
+//             if(parent->_left == current) parent->_left = nullptr;
+//             else parent->_right = nullptr;
+//         }
+//         else root = nullptr;
+//         delete current;
+//     }
+//     else if(current->_left && current->_right){
+//         tree_node<T>* temp = minimum_node(current->_right);
+//         T tempItem = temp->_item;
+//         tree_erase(root, temp->_item);
+//         current->_item = tempItem;
+//     }
+//     else{
+//         tree_node<T>* temp = (current->_left) ? current->_left : current->_right;
+//         if(current != root){
+//             if(current == parent->_left) parent->_left = temp;
+//             else parent->_right = temp;
+//         }
+//         else root = temp;
+//         delete current;
+//     }
+// }
+
 template <typename T>       //erase target from the tree, 3 cases (0 children,1 child, 2 children)
-bool tree_erase(tree_node<T>*& root, const T& target){
-    tree_node<T>* parent = nullptr;
-    tree_node<T>* current = root;
-
-    tree_search(current, target, parent);
-    if(current == nullptr) return false;
-
-    if(current->_left == nullptr && current->_right == nullptr){ //current = leaf
-        if(current != root){
-            if(parent->_left == current) parent->_left = nullptr;
-            else parent->_right = nullptr;
-        }
-        else root = nullptr;
-        delete current;
+tree_node<T>* tree_erase(tree_node<T>*& root, const T& target){
+    if(root == nullptr) return root;
+    if(target < root->_item){
+        root->_left = tree_erase(root->_left, target);
     }
-    else if(current->_left && current->_right){
-        tree_node<T>* temp = minimum_node(current->_right);
-        T tempItem = temp->_item;
-        tree_erase(root, temp->_item);
-        current->_item = tempItem;
+    else if (target > root->_item){
+        root->_right = tree_erase(root->_right, target);
     }
     else{
-        tree_node<T>* temp = (current->_left) ? current->_left : current->_right;
-        if(current != root){
-            if(current == parent->_left) parent->_left = temp;
-            else parent->_right = temp;
+        if(root->_left == nullptr){
+            tree_node<T>* temp = root->_right;
+            delete root;
+            return temp;
         }
-        else root = temp;
-        delete current;
+        else if (root->_right == nullptr){
+            tree_node<T>* temp = root->_left;
+            delete(root);
+            return temp;
+        }
+        tree_node<T>* temp = minimum_node(root->_right);
+        root->_item = temp->_item;
+        root->_right = tree_erase(root->_right, target);
     }
+    return root;
 }
 
 template <typename T> //find minimum node in subtree with root
@@ -375,4 +405,17 @@ void tree_add(tree_node<T>* & dest, const tree_node<T>* src){
         tree_insert(ret,i);
     }
 }
+
+template <typename T>
+void test_func(){
+    tree_node<T>* root = new tree_node<T>;
+    tree_insert(root, 50);
+    tree_insert(root, 75);
+    tree_insert(root, 25);
+    tree_print(root);
+}
+
+
 #endif // BST_FUNCTIONS_H
+
+
