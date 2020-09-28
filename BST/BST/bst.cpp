@@ -4,6 +4,8 @@ using namespace std;
 
 //Driver Function
 void test_bst(){
+    BST bst;
+
     char input;
     cout << "[R]andom  [I]nsert  [C]clear  [S]earch  [E]rase      e[X]it: ";
     cin >> input;
@@ -14,8 +16,17 @@ void test_bst(){
 
         switch(input){
             case 'r': //
-
-            
+                break;
+            case 'i':
+                break;
+            case 'c':
+                break;
+            case 's':
+                break;
+            case 'e':
+                break;
+            case 'x':
+                break;
         }
     }
     
