@@ -42,7 +42,7 @@ struct tree_node{
         if(this->_left != nullptr){
             heightLeft = _left->_height;
         }
-        if(this->_left != nullptr){
+        if(this->_right != nullptr){
             heightRight = _right->_height;
         }
         return (max(heightLeft, heightRight)+1);
