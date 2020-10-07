@@ -17,7 +17,10 @@ class FTokenizer
 {
 public:
     //const int MAX_BLOCK = MAX_BUFFER;
+    FTokenizer();
     FTokenizer(char *fname);
+    FTokenizer(const FTokenizer& copy_me);
+    FTokenizer& operator =(const FTokenizer & rhs);
     Token next_token();
     bool more();     //returns the current value of _more
     int pos();       //returns the value of _pos
@@ -40,6 +43,18 @@ private:
                    //  has been processed and now we are at
                    //  the end of the last block.
 };
+
+FTokenizer::FTokenizer(const FTokenizer& copy_me){
+
+}
+
+FTokenizer& FTokenizer::operator =(const FTokenizer & rhs){
+    FTokenizer temp(rhs);
+}
+
+FTokenizer::FTokenizer(){
+
+}
 
 FTokenizer::FTokenizer(char *fname)
 {

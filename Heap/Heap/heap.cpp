@@ -1,3 +1,9 @@
+/*
+ * Author: Andrew Lam
+ * Project: Tree Tokenizer
+ * Purpose: Lab 2
+ * Notes: Heap Test File
+ */
 #include "heap.h"
 #include <string>
 #include <iostream>
