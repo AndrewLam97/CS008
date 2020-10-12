@@ -1,12 +1,13 @@
 /*
  * Author: Andrew Lam
- * Project: Tree Tokenizer
- * Purpose: Lab 2
- * Notes: Heap Header File
+ * Project: Heap
+ * Purpose: Heap Header
+ * Notes: Dynamic Arr
  */
 #ifndef HEAP_H
 #define HEAP_H
 #include <assert.h>
+#include <iostream>
 #include <algorithm>
 using namespace std;
 
@@ -18,33 +19,36 @@ class MaxHeap
         k key;
         T _item;
     };
+public:
+    MaxHeap(); //ctor
 
+    MaxHeap(int _capacity); //ctor with starting size
+
+    void insert(k const key, T const _item); //inserts key item pair
+
+    int getSize(); //returns arr size (not capacity)
+
+    T getMax(); //returns top element
+    void popMax(); //pops top element
+
+    bool isEmpty() const;
+    void deleteAll(); //deletes dynamic arr
+
+    void print_heap(); //Prints arr, not necessarily in order, use getMax()
+                       //and popMax() instead
+
+    ~MaxHeap(); //dtor
 private:
     HeapItem *arr;
     int capacity;
     int size;
 
-    void doubleCapacity();
-    void shiftUp(int index);
-    void shiftDown(int index);
-
-public:
-    MaxHeap();
-
-    MaxHeap(int _capacity);
-
-    void insert(k const key, T const _item);
-
-    T getMax();
-
-    void popMax();
-
-    bool isEmpty() const;
-    void deleteAll();
-
-    ~MaxHeap();
+    void doubleCapacity(); //double arr capacity
+    void shiftUp(int index); //element swapping
+    void shiftDown(int index); //element swapping
 };
 
+//Similar in function to std::vector resize
 template <typename k, typename T>
 void MaxHeap<k, T>::doubleCapacity()
 {
@@ -116,7 +120,7 @@ void MaxHeap<k, T>::shiftDown(int index)
     shiftDown(maxIndex);
 }
 
-template <typename k, typename T>
+template <typename k, typename T> //ctor
 MaxHeap<k, T>::MaxHeap()
 {
     this->arr = nullptr;
@@ -124,7 +128,7 @@ MaxHeap<k, T>::MaxHeap()
     this->size = 0;
 }
 
-template <typename k, typename T>
+template <typename k, typename T> //ctor with starting size
 MaxHeap<k, T>::MaxHeap(int _capacity)
 {
     assert(_capacity >= 1);
@@ -134,10 +138,10 @@ MaxHeap<k, T>::MaxHeap(int _capacity)
     this->size = 0;
 }
 
-template <typename k, typename T>
+template <typename k, typename T> //insert key and item pair
 void MaxHeap<k, T>::insert(k const key, T const _item)
 {
-    if (this->size == this->capacity)
+    if (this->size == this->capacity) //arr full
     {
         doubleCapacity();
     }
@@ -148,23 +152,26 @@ void MaxHeap<k, T>::insert(k const key, T const _item)
     this->size++;
 }
 
-template <typename k, typename T>
+template <typename k, typename T> //return max item in heap
 T MaxHeap<k, T>::getMax()
 {
     assert(size != 0);
     return this->arr[0]._item;
 }
 
-template <typename k, typename T>
+template <typename k, typename T> //pop max item in heap
 void MaxHeap<k, T>::popMax()
 {
     assert(size != 0);
     swap(arr[0], arr[this->size - 1]);
-
     size--;
-
-    //shift down
     shiftDown(0);
+}
+
+template <typename k, typename T>
+int MaxHeap<k, T>::getSize()
+{
+    return size;
 }
 
 template <typename k, typename T>
@@ -173,7 +180,7 @@ bool MaxHeap<k, T>::isEmpty() const
     return (size == 0);
 }
 
-template <typename k, typename T>
+template <typename k, typename T> //delete dynamic arr
 void MaxHeap<k, T>::deleteAll()
 {
     if (this->arr != nullptr)
@@ -182,6 +189,14 @@ void MaxHeap<k, T>::deleteAll()
         arr = nullptr;
         this->capacity = 0;
         this->size = 0;
+    }
+}
+
+//Prints arr, not necessarily in order, use getMax() and popMax() instead
+template <typename k, typename T>
+void MaxHeap<k, T>::print_heap(){
+    for(int i=0;i<size;i++){
+        cout << this->arr[i]._item << " ";
     }
 }
 

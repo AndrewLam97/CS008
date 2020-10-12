@@ -1,0 +1,114 @@
+/*
+ * Author: Andrew Lam
+ * Project: Priority Queue
+ * Purpose: Priority Queue Implementation Using MaxHeap
+ * Notes: Pushes 100 random integers(1-1000) into queue with 
+ * random priority(1-10), then prints and pops.
+ */
+
+#ifndef Z_OUTPUT_H
+#define Z_OUTPUT_H
+/*
+Printing Priority Queue in descending priority...
+401
+845
+368
+627
+997
+764
+530
+367
+814
+661
+392
+686
+709
+502
+742
+299
+556
+645
+94
+438
+425
+26
+891
+537
+164
+16
+859
+858
+387
+360
+582
+182
+746
+126
+961
+289
+290
+543
+709
+971
+925
+458
+810
+901
+129
+594
+594
+825
+975
+933
+878
+9
+195
+578
+846
+821
+918
+574
+74
+930
+55
+768
+547
+824
+84
+411
+835
+186
+895
+701
+652
+986
+717
+169
+685
+619
+447
+194
+548
+286
+759
+689
+88
+431
+121
+357
+801
+723
+74
+179
+39
+868
+318
+994
+445
+59
+549
+883
+981
+83
+*/
+#endif // Z_OUTPUT_H
