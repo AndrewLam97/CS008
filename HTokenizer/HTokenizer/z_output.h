@@ -1,0 +1,222 @@
+/*
+ * Author: Andrew Lam
+ * Project: Hash Table Tokenizer
+ * Purpose: Lab 3
+ * Notes: Using solitude.txt
+ */
+
+#ifndef Z_OUTPUT_H
+#define Z_OUTPUT_H
+/*
+Reading: C:/Users/Andrew/Documents/School/PCC/CS008/HTokenizer/HTokenizer/solitude.txt
+TOP 100 TOKENS
+  #:          TOKEN  :   FREQ
+-----------------------------
+001:            the  :  10397
+002:             of  :  05047
+003:            and  :  04166
+004:             to  :  03674
+005:              a  :  03574
+006:           that  :  03057
+007:             in  :  02889
+008:            was  :  02371
+009:             he  :  02202
+010:            had  :  02172
+011:            her  :  01997
+012:           with  :  01982
+013:            his  :  01873
+014:            she  :  01622
+015:            him  :  01127
+016:            not  :  01071
+017:             on  :  01052
+018:            for  :  01009
+019:             it  :  00857
+020:             as  :  00850
+021:             by  :  00793
+022:          would  :  00790
+023:           they  :  00785
+024:      Aureliano  :  00771
+025:             at  :  00672
+026:            who  :  00671
+027:              s  :  00658
+028:           were  :  00650
+029:            but  :  00560
+030:           from  :  00554
+031:             He  :  00541
+032:           time  :  00540
+033:           when  :  00536
+034:            one  :  00525
+035:             so  :  00514
+036:            The  :  00510
+037:             an  :  00500
+038:           them  :  00475
+039:            did  :  00467
+040:        Arcadio  :  00465
+041:          rsula  :  00456
+042:             up  :  00443
+043:          which  :  00422
+044:          house  :  00416
+045:           been  :  00414
+046:            out  :  00405
+047:          their  :  00382
+048:             be  :  00368
+049:            She  :  00361
+050:        because  :  00350
+051:           only  :  00346
+052:           into  :  00342
+053:            all  :  00333
+054:          could  :  00329
+055:          about  :  00319
+056:           have  :  00315
+057:           said  :  00298
+058:           more  :  00295
+059:       Amaranta  :  00285
+060:        Segundo  :  00281
+061:             no  :  00278
+062:        Colonel  :  00271
+063:          where  :  00261
+064:           like  :  00252
+065:        without  :  00239
+066:           even  :  00236
+067:            put  :  00230
+068:           went  :  00228
+069:          first  :  00224
+070:             It  :  00218
+071:           room  :  00210
+072:           made  :  00209
+073:           over  :  00206
+074:            any  :  00204
+075:           took  :  00201
+076:          there  :  00194
+077:            two  :  00192
+078:          until  :  00192
+079:           than  :  00190
+080:       Fernanda  :  00187
+081:        through  :  00187
+082:           same  :  00186
+083:             if  :  00185
+084:            But  :  00184
+085:          other  :  00181
+086:           They  :  00179
+087:           then  :  00177
+088:         before  :  00176
+089:        Macondo  :  00174
+090:          night  :  00172
+091:             In  :  00172
+092:            old  :  00171
+093:           left  :  00169
+094:           back  :  00169
+095:            day  :  00168
+096:          after  :  00167
+097:            man  :  00166
+098:            you  :  00165
+099:           what  :  00163
+100:          found  :  00160
+
+
+BOTTOM 100 TOKENS
+  #:          TOKEN  :   FREQ
+-----------------------------
+001:       chipping  :  00001
+002:    respiration  :  00001
+003:        venture  :  00001
+004:     adulterous  :  00001
+005:      clientele  :  00001
+006:    existentiam  :  00001
+007:        harlots  :  00001
+008:      struggled  :  00001
+009:           hazy  :  00001
+010:         Center  :  00001
+011:    indigestion  :  00001
+012:     superhuman  :  00001
+013:     Frightened  :  00001
+014:       insignia  :  00001
+015:    instigation  :  00001
+016:    intemperate  :  00001
+017:      fasteners  :  00001
+018:   conservative  :  00001
+019:     involutary  :  00001
+020:    dictatorial  :  00001
+021: contemporaries  :  00001
+022:        judging  :  00001
+023:      arsonists  :  00001
+024:         cooler  :  00001
+025:           lamb  :  00001
+026:     lascivious  :  00001
+027:          Aurel  :  00001
+028:         legged  :  00001
+029:             li  :  00001
+030:           lime  :  00001
+031:         litter  :  00001
+032:         crotch  :  00001
+033:         ambush  :  00001
+034:     cultivated  :  00001
+035:        curtain  :  00001
+036:    vegetarians  :  00001
+037:      masterful  :  00001
+038:          wiles  :  00001
+039:      parasitic  :  00001
+040:        quaking  :  00001
+041:    certainties  :  00001
+042:          tents  :  00001
+043: submissiveness  :  00001
+044:     prospering  :  00001
+045:       traveled  :  00001
+046:          greed  :  00001
+047:          vigor  :  00001
+048: characteristic  :  00001
+049:    orientation  :  00001
+050:      underwent  :  00001
+051:      prophetic  :  00001
+052:          hotel  :  00001
+053:            ued  :  00001
+054:    unconquered  :  00001
+055:       sometime  :  00001
+056:       scorched  :  00001
+057:        topazes  :  00001
+058:      concordat  :  00001
+059:             ar  :  00001
+060:        connect  :  00001
+061:      consoling  :  00001
+062:         jaguar  :  00001
+063:      kidnapped  :  00001
+064:           lake  :  00001
+065:       laziness  :  00001
+066:         assume  :  00001
+067:     Guacamayal  :  00001
+068:          gaily  :  00001
+069:         curses  :  00001
+070:         master  :  00001
+071:       trotting  :  00001
+072:       engraved  :  00001
+073:        glassed  :  00001
+074:      greatness  :  00001
+075:      trumpeter  :  00001
+076:          sorts  :  00001
+077:   restlessness  :  00001
+078:      goldsmith  :  00001
+079:    Catholicism  :  00001
+080:         Carlos  :  00001
+081:            ahe  :  00001
+082:          oasis  :  00001
+083:          kicks  :  00001
+084:           lays  :  00001
+085:         Sacred  :  00001
+086:       maleness  :  00001
+087:           quez  :  00001
+088:           sper  :  00001
+089:       vagaries  :  00001
+090:        prophet  :  00001
+091:   impertinence  :  00001
+092:       confined  :  00001
+093:           kick  :  00001
+094:         litary  :  00001
+095:        violate  :  00001
+096:     suppressed  :  00001
+097:         hating  :  00001
+098:         clumsy  :  00001
+099:    exaggerated  :  00001
+100:       Publicly  :  00001
+Press any key to continue . . .
+*/
+#endif // Z_OUTPUT_H

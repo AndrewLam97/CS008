@@ -6,7 +6,7 @@
  */
 #include "../../BST/AVL/avl_tree.h"
 #include "../../BST/AVL/avl_array.h"
-#include "../../Heap/Heap/heap.h"
+#include "../../!includes/heap/heap.h"
 #include "../../FTokenizer/FTokenizer/FTokenizer.h"
 #include <map>
 #include <iostream>
@@ -55,7 +55,7 @@ void TTokenizer::make_heap(){
 
 void TTokenizer::print_top(){
     for(int i = 1; i <= 100; i++){
-        cout << i << ": " << h.getMax() << endl;
+        cout << i << ": " << h.getMax() << " : " << h.getMaxKey() << endl;
         h.popMax();
     }
     

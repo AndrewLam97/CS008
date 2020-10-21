@@ -11,7 +11,7 @@
 #include "../../STokenizer/STokenizer/s_tokenizer.h"
 
 const int MAX_BLOCK = 2000;
-bool debug = true;
+bool debug = false;
 
 class FTokenizer
 {

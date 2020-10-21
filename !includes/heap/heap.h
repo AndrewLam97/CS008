@@ -29,6 +29,7 @@ public:
     int getSize(); //returns arr size (not capacity)
 
     T getMax(); //returns top element
+    k getMaxKey(); //returns top key
     void popMax(); //pops top element
 
     bool isEmpty() const;
@@ -157,6 +158,12 @@ T MaxHeap<k, T>::getMax()
 {
     assert(size != 0);
     return this->arr[0]._item;
+}
+
+template <typename k, typename T>
+k MaxHeap<k, T>::getMaxKey(){
+    assert(size != 0);
+    return this->arr[0].key;
 }
 
 template <typename k, typename T> //pop max item in heap
