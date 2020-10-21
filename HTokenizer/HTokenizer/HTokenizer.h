@@ -20,7 +20,6 @@ public:
     void make_heap();
     void print_top_bottom();
 private:
-    avl_array<string, int, std::uint16_t, 2048, true> a;
     MaxHeap<int, string> h;
     map<string, int> m;
     map<string, int>::iterator it;
