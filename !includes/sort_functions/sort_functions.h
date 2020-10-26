@@ -1,3 +1,9 @@
+/*
+ * Author: Andrew Lam
+ * Project: Sort Functions
+ * Purpose: Timing Sort Functions
+ * Notes: QuickSort, MergeSort, HeapSort
+ */
 #ifndef SORT_FUNCTIONS_H
 #define SORT_FUNCTIONS_H
 #include <iostream>

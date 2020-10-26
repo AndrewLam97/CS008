@@ -1,3 +1,9 @@
+/*
+ * Author: Andrew Lam
+ * Project: Sort Functions
+ * Purpose: Timing Sort Functions
+ * Notes: main file
+ */
 #include "../timer/timer.h"
 #include "../averager/averager.h"
 #include "sort_functions.h"
