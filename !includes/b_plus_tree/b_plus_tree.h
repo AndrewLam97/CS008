@@ -1,67 +1,56 @@
-/*
- * Author: Andrew Lam
- * Project: BTree
- * Purpose: BTree Class
- * Notes: Header File.
- */
-#ifndef BTREE_H
-#define BTREE_H
-
+#ifndef B_PLUS_TREE_H
+#define B_PLUS_TREE_H
 #include <iostream>
 #include <iomanip>
-#include <queue>
+#include <vector>
 using namespace std;
 
 template <class T>
-class BTree;
+class BPlusTree;
 
 template <class T>
-class BTreeNode;
+class BPlusTreeNode;
 
 template <class T>
-class BTreeNode { 
-public: 
-    BTreeNode(int _t, bool _leaf);              // Constructor 
+class BPlusTreeNode{
+public:
+    BPlusTreeNode(int _t, bool _leaf);              // Constructor 
 
     bool contains(const T& entry);              //true if entry can be found in the array
     T& get(const T& entry);                     //return a reference to entry in the tree
     //T* find(const T& entry);                  //return a pointer to this key. NULL if not there.
-    BTreeNode* find(T entry);
+    BPlusTreeNode* find(T entry);
     int greaterThanOrEqualTo(const T& entry);   //return index of first element greater than or equal to entry
 
     int size() const;                           //count the number of elements in the tree
     bool empty() const;                         //true if the tree is empty
 
-    void dfs_traverse();                        //DFS traversal to pick up and print nodes
-
     void print(int indent) const;
-
 private:
     static const int t = 3;
-    //static const int MINIMUM = 1;
-    //static const int MAXIMUM = 2 * MINIMUM;
 
     int data_count;                            //number of data elements
     T data[2*t-1];                             //holds the keys
     int child_count;                           //number of children
-    BTreeNode<T>* subset[2*t];                 //subtrees
+    BPlusTreeNode<T>* subset[2*t];             //subtrees
     
     bool leaf;
-    //bool is_leaf() const {return child_count==0;}   //true if this is a leaf node
     bool is_leaf() const {return leaf;}
+
+    BPlusTreeNode* next;
+    BPlusTreeNode* prev;
 
     //insert element functions
     void loose_insert(const T& entry);              //allows MAXIMUM+1 data elements in the root
-    void splitChild(int i, BTreeNode<T> *y);
+    void splitChild(int i, BPlusTreeNode<T> *y);
     void fix_excess(int i);                         //fix excess of data elements in child i
 
     //remove element functions:
+    void remove(const T& entry);
     void loose_remove(const T& entry);              //allows MINIMUM-1 data elements in the root
     void fix_shortage(int i);                       //fix shortage of data elements in child i
 
     void remove_biggest(T& entry);                  //remove the biggest child of this tree->entry
-
-    void remove(const T& entry);
 
     void removeIfLeaf(int i);
     void removeNotLeaf(int i);
@@ -75,108 +64,105 @@ private:
 
     void traverse();                                //traverse tree in ascending order
 
-friend class BTree<T>; 
-}; 
+friend class BPlusTree<T>;
+};
 
 template <class T>
-class BTree {
+class BPlusTree{
 public:
-    BTree( int _t, bool dups = false);
-
-    //big three:
-    //BTree(const BTree<T>& other);
-    //~BTree();
-    //BTree<T>& operator =(const BTree<T>& RHS);
+    BPlusTree( int _t, bool dups = false);
 
     void clear_tree();                          //clear this object (delete all nodes etc.)
-    void copy_tree(const BTree<T>& other);      //copy other into this object
+    void copy_tree(const BPlusTree<T>& other);      //copy other into this object
 
     void insert(const T& entry);                //insert entry into the tree
     void remove(const T& entry);                //remove entry from the tree
 
+    BPlusTreeNode<T>* find(const T& entry);      //return a pointer to node containing entry
+    bool contains(const T& entry);
     T& get(const T& entry);                     //return a reference to entry in the tree
-    //T* find(const T& entry);                    //return a pointer to this key. NULL if not there.
-    BTreeNode<T>* find(T entry);
+    //T* find(const T& entry);                  //return a pointer to this key. NULL if not there.
 
     void print_tree(int level = 0, ostream &outs=cout) const; //print a readable version of the tree
-    friend ostream& operator<<(ostream& outs, const BTree<T>& print_me){
-        print_me.print_tree(0, outs);
+    friend ostream& operator<<(ostream& outs, const BPlusTree<T>& print_me){
         return outs;
     }
+
     void traverse();                            //traverse tree in ascending order
-    void dfs_traverse();                        //traverse tree using DFS
 
     void print();
-
 private:
     bool dups_ok;                               //true if duplicate keys may be inserted
 
-    BTreeNode<T> *root;
+    BPlusTreeNode<T> *root;
 
     int t;
-    static const int MINIMUM = 2;
-    static const int MAXIMUM = 2 * MINIMUM - 1;
+    //static const int MINIMUM = 2;
+    //static const int MAXIMUM = 2 * MINIMUM - 1;
 };
 
-
-
-
-template <typename T>
-void BTree<T>::print(){
-    root->dfs_traverse();
-}
+//---------------------------------------------------------------------
+//B_PLUS_TREE
+//B_PLUS_TREE
+//B_PLUS_TREE
+//---------------------------------------------------------------------
 
 template <typename T>
-void BTree<T>::traverse(){
-    if((root != nullptr)){
-        root->traverse();
-    }
-}
-
-template <typename T>
-void BTreeNode<T>::print(int indent) const{
-    const int EXTRA_INDENTATION = 4;
-    size_t i;
-
-    cout << setw(indent) << "";
-
-    for(i = 0; i < data_count; i++){
-        cout << data[i] << " ";
-    }
-    cout << endl;
-
-    for(i = 0; i < child_count; ++i){
-        subset[i]->print(indent + EXTRA_INDENTATION);
-    }
-}
-
-template <typename T>
-BTree<T>::BTree(int _t, bool dups){
+BPlusTree<T>::BPlusTree(int _t, bool dups){
     this->dups_ok = dups;
     root = nullptr;
     t = _t;
 }
 
 template <typename T>
-void BTree<T>::insert(const T& entry){
+void BPlusTree<T>::print(){
+    root->traverse();
+}
+
+template <typename T>
+void BPlusTree<T>::traverse(){
+    if((root != nullptr)){
+        root->traverse();
+    }
+}
+
+template <typename T>
+BPlusTreeNode<T>* BPlusTree<T>::find(const T& entry){
+    return root->find(entry);
+}
+
+template <typename T>
+T& BPlusTree<T>::get(const T& entry){
+    return root->get(entry);
+}
+
+template <typename T>
+bool BPlusTree<T>::contains(const T& entry){
+    return root->contains(entry);
+}
+
+
+template <typename T>
+void BPlusTree<T>::insert(const T& entry){
     //tree empty
     if (root == NULL) { 
-        root = new BTreeNode<T>(t, true); 
+        root = new BPlusTreeNode<T>(t, true); 
         root->data[0] = entry;  
         root->data_count = 1;   
     } 
     else { 
         if (root->data_count == 2*t-1) { 
-            BTreeNode<T> *s = new BTreeNode<T>(t, false); 
-  
+            BPlusTreeNode<T> *s = new BPlusTreeNode<T>(t, false); 
+
             s->subset[0] = root; 
   
             // split root 
             s->splitChild(0, root); 
   
             int i = 0; 
-            if (s->data[0] < entry) 
+            if (s->data[0] < entry){
                 i++; 
+            }
             s->subset[i]->loose_insert(entry); 
   
             root = s; 
@@ -187,19 +173,7 @@ void BTree<T>::insert(const T& entry){
 }
 
 template <typename T>
-T& BTree<T>::get(const T& entry){
-    if(root == nullptr){
-        // T emptyT = NULL;
-        // T &ref = emptyT;
-        // return ref;
-    }
-    else{
-        return root->get(entry);
-    }
-}
-
-template <typename T>
-void BTree<T>::remove(const T& entry) 
+void BPlusTree<T>::remove(const T& entry) 
 { 
     if (!root) 
     { 
@@ -214,7 +188,7 @@ void BTree<T>::remove(const T& entry)
     //if it has a child, otherwise set root as NULL 
     if (root->data_count==0) 
     { 
-        BTreeNode<T> *tmp = root; 
+        BPlusTreeNode<T> *tmp = root; 
         if (root->leaf) 
             root = NULL; 
         else
@@ -223,41 +197,21 @@ void BTree<T>::remove(const T& entry)
         delete tmp; 
     } 
     return; 
-} 
+}
 
-//---------------------------------------------------------------------------------
-//BTreeNode
-//BTreeNode
-//BTreeNode
-//BTreeNode
-//BTreeNode
-//---------------------------------------------------------------------------------
+//---------------------------------------------------------------------
+//B_PLUS_TREE_NODE
+//B_PLUS_TREE_NODE
+//B_PLUS_TREE_NODE
+//---------------------------------------------------------------------
 
-// template <typename T>
-// T* BTree<T>::find(const T& entry){
-//     if(root == nullptr){
-//         return NULL;
-//     }
-//     else{
-//         return root->find(entry);
-//     }
-// }
-
-//---------------------------------------------------------------
-//     P R I N T  E T C.
-//---------------------------------------------------------------
-// template <typename T>
-// void BTree<T>::print_tree(int level, ostream& outs) const{
-//     //1. print the last child (if any)
-//     //2. print all the rest of the data and children
-//     if (leaf == false) {
-//         subset[i]->traverse(); 
-//     }
-// }
+//UTIL
+//UTIL
+//UTIL
 
 // Constructor for BTreeNode class 
 template <typename T>
-BTreeNode<T>::BTreeNode(int t1, bool leaf1) { 
+BPlusTreeNode<T>::BPlusTreeNode(int t1, bool leaf1) { 
     leaf = leaf1; 
 
     //data = new T[2*t-1]; 
@@ -267,7 +221,7 @@ BTreeNode<T>::BTreeNode(int t1, bool leaf1) {
 } 
 
 template <typename T>
-void BTreeNode<T>::traverse(){
+void BPlusTreeNode<T>::traverse(){
     int i; 
     //cout << "Data Count: " << data_count << endl;
     for (i = 0; i < data_count; i++) { 
@@ -280,64 +234,57 @@ void BTreeNode<T>::traverse(){
     // last child
     if (leaf == false) {
         subset[i]->traverse(); 
-        //cout << endl;
-    }
-    //cout << endl;
-}
-
-// template <typename T>
-// void BTreeNode<T>::dfs_traverse(){
-//     stack<BTreeNode<T>*> stack;
-//     stack.push(this);
-//     while (!stack.empty())
-//     {
-//         BTreeNode* current = stack.top();
-//         stack.pop();
-//         int i;
-//         for (i = 0; i < data_count; i++)
-//         {
-//             if (leaf == false)
-//                 stack.push(current->subset[i]); 
-//             cout << " " << current->data[i];
-//         }
-//         if (leaf == false)
-//             stack.push(current->subset[i]);
-//     }
-// }
-
-template <typename T>
-void BTreeNode<T>::dfs_traverse(){
-    queue<BTreeNode<T>*> q;
-    q.push(this);
-
-    while(!q.empty()){
-        BTreeNode<T>* r = q.front();
-        q.pop();
-        int i;
-        for (i = 0; i < data_count; i++)
-            {
-                if (leaf == false)
-                    q.push(r->subset[i]); 
-                cout << " " << r->data[i];
-            }
-            if (leaf == false)
-                q.push(r->subset[i]);
-    }
-}
-
-//FIX
-template <typename T>
-BTreeNode<T>* BTree<T>::find(T entry){
-    if(root == nullptr){
-        return NULL;
-    }
-    else{
-        return root->find(entry);
     }
 }
 
 template <typename T>
-int BTreeNode<T>::greaterThanOrEqualTo(const T& entry){
+BPlusTreeNode<T>* BPlusTreeNode<T>::find(T entry){ 
+    // First greater than or equal to
+    int i = 0; 
+    while (i < data_count && entry > data[i]) {
+        i++; 
+    }
+    // If found
+    if (data[i] == entry) {
+        return this; 
+    }
+  
+    // If !found and leaf 
+    if (leaf == true) {
+        return nullptr;  
+    }
+    return subset[i]->find(entry); 
+} 
+
+template <typename T>
+T& BPlusTreeNode<T>::get(const T& entry){ 
+    // First greater than or equal to
+    int i = 0; 
+    while (i < data_count && entry > data[i]) {
+        //cout << "i: " << i << ", " << entry << endl;
+        i++; 
+    }
+  
+    // If found
+    if (data[i] == entry) {
+        return data[i];
+    }
+
+    return subset[i]->get(entry); 
+}
+
+template <typename T>
+bool BPlusTreeNode<T>::contains(const T& entry){
+    if(find(entry) != nullptr){ return true; }
+    else return false;
+}
+
+//INSERT
+//INSERT
+//INSERT
+
+template <typename T>
+int BPlusTreeNode<T>::greaterThanOrEqualTo(const T& entry){
     int i=0; 
     while (i<data_count && data[i] < entry) 
         ++i; 
@@ -345,7 +292,7 @@ int BTreeNode<T>::greaterThanOrEqualTo(const T& entry){
 }
 
 template <typename T>
-void BTreeNode<T>::loose_insert(const T& entry){
+void BPlusTreeNode<T>::loose_insert(const T& entry){
     // start at last element
     int i = data_count-1; 
   
@@ -377,8 +324,8 @@ void BTreeNode<T>::loose_insert(const T& entry){
 }
 
 template <typename T>
-void BTreeNode<T>::splitChild(int i, BTreeNode *y) { 
-    BTreeNode<T> *z = new BTreeNode<T>(y->t, y->leaf); 
+void BPlusTreeNode<T>::splitChild(int i, BPlusTreeNode *y) { 
+    BPlusTreeNode<T> *z = new BPlusTreeNode<T>(y->t, y->leaf); 
     z->data_count = t - 1; 
   
     // copy last keys 
@@ -414,56 +361,13 @@ void BTreeNode<T>::splitChild(int i, BTreeNode *y) {
     data_count = data_count + 1; 
 } 
 
-template <typename T>
-BTreeNode<T> *BTreeNode<T>::find(T entry){ 
-    // First greater than or equal to
-    int i = 0; 
-    while (i < data_count && entry > data[i]) {
-        i++; 
-    }
-    // If found
-    if (data[i] == entry) {
-        return this; 
-    }
-  
-    // If !found and leaf 
-    if (leaf == true) {
-        return NULL;  
-    }
-    return subset[i]->find(entry); 
-} 
-
-template <typename T>
-T& BTreeNode<T>::get(const T& entry){ 
-    // First greater than or equal to
-    int i = 0; 
-    while (i < data_count && entry > data[i]) {
-        //cout << "i: " << i << ", " << entry << endl;
-        i++; 
-    }
-  
-    // If found
-    if (data[i] == entry) {
-        //auto& ref = data[i]; 
-        //cout << "final i: " << i << ", final entry: " << entry << endl;
-        return data[i];
-    }
-
-    // // If !found and leaf 
-    // if (leaf == true) 
-    //     T emptyT = NULL;
-    //     T &ref = emptyT;
-    //     return ref;  
-
-    return subset[i]->get(entry); 
-} 
-
-
-//-----------------------------------------------------------------------
 //REMOVE
-//-----------------------------------------------------------------------
+//REMOVE
+//REMOVE
+
+
 template <typename T>
-void BTreeNode<T>::remove(const T& entry) { 
+void BPlusTreeNode<T>::remove(const T& entry) { 
     int i = greaterThanOrEqualTo(entry); 
   
     // key present in node
@@ -497,7 +401,7 @@ void BTreeNode<T>::remove(const T& entry) {
 } 
 
 template <typename T>
-void BTreeNode<T>::removeIfLeaf (int i) { 
+void BPlusTreeNode<T>::removeIfLeaf (int i) { 
     // Shift all keys after index left 
     for (int j=i+1; j<data_count; ++j){
         data[j-1] = data[j]; 
@@ -509,7 +413,7 @@ void BTreeNode<T>::removeIfLeaf (int i) {
 } 
 
 template <typename T>
-void BTreeNode<T>::removeNotLeaf(int i) { 
+void BPlusTreeNode<T>::removeNotLeaf(int i) { 
     T k = data[i]; 
 
     //if child that's before entry has at least t keys, find prev in subset[i]
@@ -539,10 +443,10 @@ void BTreeNode<T>::removeNotLeaf(int i) {
 } 
 
 template <typename T>
-T BTreeNode<T>::getPrev(int i) 
+T BPlusTreeNode<T>::getPrev(int i) 
 { 
     //find rightmost leaf 
-    BTreeNode *cur=subset[i]; 
+    BPlusTreeNode *cur=subset[i]; 
     while (!cur->leaf){
         cur = cur->subset[cur->data_count]; 
     }
@@ -551,10 +455,10 @@ T BTreeNode<T>::getPrev(int i)
 } 
 
 template <typename T>
-T BTreeNode<T>::getNext(int i) 
+T BPlusTreeNode<T>::getNext(int i) 
 { 
     //start at subset[i+1] and move left until leaf
-    BTreeNode *cur = subset[i+1]; 
+    BPlusTreeNode *cur = subset[i+1]; 
     while (!cur->leaf) 
         cur = cur->subset[0]; 
   
@@ -563,7 +467,7 @@ T BTreeNode<T>::getNext(int i)
 } 
 
 template <typename T>
-void BTreeNode<T>::fix_shortage(int i) {
+void BPlusTreeNode<T>::fix_shortage(int i) {
     //if prev child has too many keys, rotate right
     if (i!=0 && subset[i-1]->data_count>=t) 
         rotate_right(i); 
@@ -583,13 +487,13 @@ void BTreeNode<T>::fix_shortage(int i) {
 }
 
 template <typename T>
-void BTreeNode<T>::rotate_right(int i) 
+void BPlusTreeNode<T>::rotate_right(int i) 
 { 
     //parent takes subset[i-1]'s last key
     //parent's data[i-1] is inserted to subset[i]
 
-    BTreeNode<T> *child=subset[i]; 
-    BTreeNode<T> *sibling=subset[i-1];  
+    BPlusTreeNode<T> *child=subset[i]; 
+    BPlusTreeNode<T> *sibling=subset[i-1];  
   
     //shift subset[i]
     for (int j=child->data_count-1; j>=0; --j) 
@@ -618,10 +522,10 @@ void BTreeNode<T>::rotate_right(int i)
 } 
 
 template<typename T>
-void BTreeNode<T>::rotate_left(int i) 
+void BPlusTreeNode<T>::rotate_left(int i) 
 {
-    BTreeNode<T> *child=subset[i]; 
-    BTreeNode<T> *sibling=subset[i+1]; 
+    BPlusTreeNode<T> *child=subset[i]; 
+    BPlusTreeNode<T> *sibling=subset[i+1]; 
   
     //data[i] inserted as last key into subset[i]
     child->data[(child->data_count)] = data[i]; 
@@ -653,10 +557,10 @@ void BTreeNode<T>::rotate_left(int i)
 }
 
 template <typename T>
-void BTreeNode<T>::merge_with_next_subset(int i) 
+void BPlusTreeNode<T>::merge_with_next_subset(int i) 
 { 
-    BTreeNode *child = subset[i]; 
-    BTreeNode *sibling = subset[i+1]; 
+    BPlusTreeNode *child = subset[i]; 
+    BPlusTreeNode *sibling = subset[i+1]; 
   
     //get key from current, insert into subset[i]'s t-1 pos
     child->data[t-1] = data[i]; 
@@ -688,4 +592,5 @@ void BTreeNode<T>::merge_with_next_subset(int i)
     delete(sibling); 
     return; 
 } 
-#endif // BTREE_H
+
+#endif // B_PLUS_TREE_H
