@@ -1,3 +1,9 @@
+/*
+ * Author: Andrew Lam
+ * Project: BPlusTree
+ * Purpose: BPlusTree Class
+ * Notes: Header File.
+ */
 #ifndef B_PLUS_TREE_H
 #define B_PLUS_TREE_H
 #include <iostream>
