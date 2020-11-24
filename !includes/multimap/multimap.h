@@ -1,5 +1,9 @@
+#ifndef MULTI_MAP_H
+#define MULTI_MAP_H
+
 #include "../b_plus_tree/b_plus_tree.h"
 #include "mpair.h"
+using namespace std;
 
 template <typename K, typename V>
 class MMap
@@ -22,7 +26,7 @@ public:
 
     MMap();
 
-//  Iterators
+//Iterators
     Iterator begin();
     Iterator end();
 
@@ -35,7 +39,16 @@ public:
     vector<V>& operator[](const K& key);
 
 //  Modifiers
-    void insert(const K& k, const V& v);
+    void insert(const MPair<K, V> insert_me){
+        bpt.insert(insert_me);
+        key_count++;
+    }
+    void insert(const K& k, const V& v){
+        MPair<K, V> tempPair{k, v};
+        bpt.insert(tempPair);
+        key_count++;
+    }
+
     void erase(const K& key);
     void clear();
 
@@ -43,15 +56,13 @@ public:
     bool contains(const K& key) const ;
     vector<V> &get(const K& key);
 
-    Iterator find(const K& key);
+    // Iterator find(const K& key);
     int count(const K& key);
-    // I have not writtent hese yet, but we will need them:
+    // I have not written these yet, but we will need them:
     //    int count(const K& key);
     //    lower_bound
     //    upper_bound
     //    equal_range:
-
-
 
     bool is_valid();
 
@@ -61,5 +72,38 @@ public:
     }
 
 private:
-    BPlusTree<MPair<K, V> > mmap;
+    map_base bpt{3};
+    int key_count;
 };
+
+//--------------------------------------------------------------------------
+
+template <typename K, typename V>
+MMap<K, V>::MMap(){
+    key_count = 0;
+}
+
+template <typename K, typename V>
+int MMap<K, V>::size() const{
+    return key_count;
+}
+
+template <typename K, typename V>
+bool MMap<K, V>::empty() const{
+    if(key_count == 0) return true;
+    else return false;
+}
+
+template <typename K, typename V>
+vector<V>& MMap<K, V>::operator[](const K& key){
+    vector<V>& v = bpt.get(key).value_list;
+    return v;
+}
+
+template <typename K, typename V>
+void MMap<K, V>::erase(const K& key){
+    bpt.remove(key);
+    key_count--;
+}
+
+#endif // MULTI_MAP_H

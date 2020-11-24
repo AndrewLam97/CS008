@@ -3,21 +3,31 @@
 #include <iostream>
 
 int main(){
-    Map<int, string> m;
+    Map<string, string> m;
 
-    Pair<int, string> tempPair{1, "asdlkfjsadlfkja"};
+    cout << "Inserting: " << "\"One\", \"potato\"" << endl;
+    Pair<string, string> tempPair{"One", "potato"};
     m.insert(tempPair.key, tempPair.value);
-
-    Pair<int, string> tempPair2{2, "kasjdfk"};
+    cout << "Inserting: " << "\"Two\", \"apple\"" << endl;
+    Pair<string, string> tempPair2{"Two", "apple"};
     m.insert(tempPair2.key, tempPair2.value);
-
-    Pair<int, string> tempPair3{3, "12313131"};
+    cout << "Inserting: " << "\"Three\", \"banana\"" << endl;
+    Pair<string, string> tempPair3{"Three", "banana"};
     m.insert(tempPair3.key, tempPair3.value);
-
-    Pair<int, string> tempPair4{4, "9999999"};
+    cout << "Inserting: " << "\"Four\", \"orange\"" << endl;
+    Pair<string, string> tempPair4{"Four", "orange"};
     m.insert(tempPair4.key, tempPair4.value);
 
-    cout << m[2] << endl;
+    cout << "Map Size: " << m.size() << endl;
+    
+    cout << "Removing key 1..." << endl;
+    m.erase("One");
+
+    cout << "Map Size: " << m.size() << endl;
+
+    cout << "Printing 2" << endl;
+    cout << m["Two"] << endl;
+
 
     system("PAUSE");
     return 0;

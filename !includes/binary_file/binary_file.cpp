@@ -1,6 +1,5 @@
 #include "Record.h"
 #include "binary_file.h"
-#include <cstring>
 #include <iostream>
 #include <fstream>
 using namespace std;
@@ -48,6 +47,8 @@ int main(int argc, char *argv[])
     cout<<"number of bytes read: "<<bytes<<endl;
 
     cout <<endl<<endl<<endl<< "================================" << endl;
+
+    system("PAUSE");
     return 0;
 }
 

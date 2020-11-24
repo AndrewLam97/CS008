@@ -66,10 +66,11 @@ private:
     map_base bt{3};
 };
 
+//-----------------------------------------------------------------------------
+
  template <typename K, typename V>
  Map<K, V>::Map(){
      key_count = 0;
-
 }
 
 template <typename K, typename V>
@@ -85,9 +86,6 @@ bool Map<K, V>::empty() const{
 
 template <typename K, typename V>
 V& Map<K, V>::operator[](const K& key){
-    //Pair<K, V> tempPair = bt.get(key);
-    //V tempValue = tempPair.value;
-
     V& ValueRef = bt.get(key).value;
     return ValueRef;
 }
@@ -96,6 +94,13 @@ template <typename K, typename V>
 void Map<K, V>::insert(const K& k, const V& v){
     Pair<K, V> tempPair = {k, v};
     bt.insert(tempPair);
+    key_count++;
+}
+
+template <typename K, typename V>
+void Map<K, V>::erase(const K& key){
+    bt.remove(key);
+    key_count--;
 }
 
 

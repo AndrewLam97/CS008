@@ -1,5 +1,6 @@
 #ifndef BINARY_FILE_H
 #define BINARY_FILE_H
+#include <cstring>
 #include <fstream>
 #include <iostream>
 using namespace std;
