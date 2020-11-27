@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     //reset the file:
     open_fileW(f, "record_list.bin");
     for (int i= 0; i<10; i++){
-        Record r(list[i]);      //filling the envelop
+        Record r(list[i]);      //filling the envelope
         long recno = r.write(f);
         cout<<"["<<list[i] <<"]"<< " was written into file as record: "<<recno<<endl;
     }

@@ -15,11 +15,14 @@ int main(){
     cout << "Inserting: " << "{\"Jane\", \"Appleseed\", \"Physics\"}" << endl;
     t.insert({"Jane", "Appleseed", "Physics"});
 
-    cout << endl << "Dumping table with select_all()..." << endl;
-    t.select_all();
+    //cout << endl << "Dumping table with select_all()..." << endl;
+    //t.select_all();
 
     cout << endl << "Dumping table using insertion operator..." << endl;
     cout << t;
+
+    cout << endl;
+    t.select_field("last");
 
     system("PAUSE");
     return 0;
