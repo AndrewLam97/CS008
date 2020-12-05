@@ -6,10 +6,14 @@
  */
 #ifndef B_PLUS_TREE_H
 #define B_PLUS_TREE_H
+#include <queue>
+#include <vector>
 #include <iostream>
 #include <iomanip>
-#include <vector>
+#include <cassert>
 using namespace std;
+
+static const bool DEBUG = false;
 
 template <class T>
 class BPlusTree;
@@ -20,7 +24,7 @@ class BPlusTreeNode;
 template <class T>
 class BPlusTreeNode{
 public:
-    BPlusTreeNode(int _t, bool _leaf);              // Constructor 
+    BPlusTreeNode(int _t, bool _leaf);          // Constructor 
 
     bool contains(const T& entry);              //true if entry can be found in the array
     T& get(const T& entry);                     //return a reference to entry in the tree
@@ -31,12 +35,14 @@ public:
     int size() const;                           //count the number of elements in the tree
     bool empty() const;                         //true if the tree is empty
 
-    void print(int indent) const;
+    void print(BPlusTreeNode<T>* cursor);
 private:
-    static const int t = 3;
+    static const int t = 1;
+    //static const int MIN = 1;
+    //static const int MAX = 2;
 
     int data_count;                            //number of data elements
-    T data[2*t-1];                             //holds the keys
+    T data[2*t-1];                           //holds the keys
     int child_count;                           //number of children
     BPlusTreeNode<T>* subset[2*t];             //subtrees
     
@@ -52,7 +58,7 @@ private:
     void fix_excess(int i);                         //fix excess of data elements in child i
 
     //remove element functions:
-    void remove(const T& entry);
+    bool remove(const T& entry);
     void loose_remove(const T& entry);              //allows MINIMUM-1 data elements in the root
     void fix_shortage(int i);                       //fix shortage of data elements in child i
 
@@ -69,7 +75,7 @@ private:
     void merge_with_next_subset(int i);             //merge subset i with subset i+1
 
     void traverse();                                //traverse tree in ascending order
-    void ll_traverse();
+    void ll_traverse(vector<BPlusTreeNode<T>*>&ll);
 
 friend class BPlusTree<T>;
 };
@@ -77,7 +83,40 @@ friend class BPlusTree<T>;
 template <class T>
 class BPlusTree{
 public:
-    BPlusTree( int _t, bool dups = false);
+    class Iterator{
+        public:
+            friend class BPlusTree;
+            Iterator(BPlusTree<T>* _it=NULL, int _key_ptr = 0):it(_it), key_ptr(_key_ptr){}
+
+            T operator *(){
+                assert(key_ptr<it->data_count);
+            }
+
+            Iterator operator++(int un_used){
+            }
+
+            Iterator operator++(){
+                ++key_ptr;
+                return *this;
+            }
+            friend bool operator ==(const Iterator& lhs, const Iterator& rhs){
+                return (lhs==rhs);
+            }
+
+            friend bool operator !=(const Iterator& lhs, const Iterator& rhs){
+                return (lhs!=rhs);
+            }
+            void print_Iterator(){
+            }
+            bool is_null(){return !it;}
+
+
+        private:
+            BPlusTree<T>* it;
+            int key_ptr;
+    };
+
+    BPlusTree( int _t=1, bool dups = false);
 
     void clear_tree();                          //clear this object (delete all nodes etc.)
     void copy_tree(const BPlusTree<T>& other);      //copy other into this object
@@ -95,13 +134,18 @@ public:
         return outs;
     }
 
+    int get_ll_size(){return ll.size();}
+    int get_size(){return ll.size();}
+
     void traverse();                            //traverse tree in ascending order
-    void ll_traverse(BPlusTreeNode<T> s);       //traverse leafs in a linked list fashion
+    void ll_traverse();                         //traverse leafs in a linked list fashion
 
     void print();
+    void print_ll();
 private:
     BPlusTreeNode<T>* smallestNode();
-
+    int size;
+    vector<BPlusTreeNode<T>*>ll;
     bool dups_ok;                               //true if duplicate keys may be inserted
     BPlusTreeNode<T> *root;
     int t;
@@ -119,14 +163,25 @@ template <typename T>
 BPlusTree<T>::BPlusTree(int _t, bool dups){
     this->dups_ok = dups;
     root = nullptr;
+    size = 0;
     t = _t;
 }
 
 template <typename T>               /////////////////
 void BPlusTree<T>::print(){
     if((root != nullptr)){
-        root->traverse();
+        root->print(root);
     }
+}
+
+template <typename T>
+void BPlusTree<T>::print_ll(){
+    if(DEBUG)cout << "ll size: " << ll.size() << endl;
+    if(DEBUG)cout << "Printing ll: ";
+    for(int x = 0; x<ll.size();x++){
+        cout << ll[x]->data[0] << " ";
+    }
+    cout << endl;
 }
 
 template <typename T>
@@ -137,9 +192,10 @@ void BPlusTree<T>::traverse(){
 }
 
 template <typename T>
-void BPlusTree<T>::ll_traverse(BPlusTreeNode<T> s){
-    if(s != nullptr){
-        s->ll_traverse();
+void BPlusTree<T>::ll_traverse(){
+    if(root != nullptr){
+        ll.clear();
+        root->ll_traverse(ll);
     }
 }
 
@@ -180,10 +236,14 @@ void BPlusTree<T>::insert(const T& entry){
     if (root == NULL) { 
         root = new BPlusTreeNode<T>(t, true); 
         root->data[0] = entry;  
-        root->data_count = 1;   
+        root->data_count = 1;
+        size++;
     } 
-    else { 
-        if (root->data_count == 2*t-1) { 
+    else {
+        if(contains(entry)&&dups_ok == false){
+            return;
+        }
+        if (root->data_count == 2*t-1) { //root full, make new root
             BPlusTreeNode<T> *s = new BPlusTreeNode<T>(t, false); 
 
             s->subset[0] = root; 
@@ -199,9 +259,13 @@ void BPlusTree<T>::insert(const T& entry){
   
             root = s; 
         } 
-        else
+        else{
             root->loose_insert(entry); 
-    } 
+        }
+        size++;
+    }
+    ll_traverse();
+    if(DEBUG)print_ll();
 }
 
 template <typename T>
@@ -209,12 +273,12 @@ void BPlusTree<T>::remove(const T& entry)
 { 
     if (!root) 
     { 
-        cout << "Empty tree" << endl; 
+        cout << "Tree is empty" << endl; 
         return; 
     } 
   
     //call the remove function on root 
-    root->remove(entry); 
+    if(root->remove(entry)) size--; 
   
     //if root node has 0 keys, make its first child the new root 
     //if it has a child, otherwise set root as NULL 
@@ -227,7 +291,8 @@ void BPlusTree<T>::remove(const T& entry)
             root = root->subset[0]; 
  
         delete tmp; 
-    } 
+    }
+    ll_traverse();
     return; 
 }
 
@@ -272,8 +337,38 @@ void BPlusTreeNode<T>::traverse(){
 }
 
 template <typename T>
-void BPlusTreeNode<T>::ll_traverse(){
-    
+void BPlusTreeNode<T>::print(BPlusTreeNode<T>* cursor){
+    queue<BPlusTreeNode*> q;
+    q.push(cursor);
+    while(!q.empty()){
+        BPlusTreeNode* temp = q.front();
+        q.pop();
+        for(int i = 0; i < temp->data_count;i++){
+            cout << temp->data[i] << " " << endl;
+        }
+        if(!temp->leaf){
+            for(int j = 0; j < temp->data_count+1;j++){
+            q.push(temp->subset[j]);
+            }
+        }
+    }
+}
+
+template <typename T>
+void BPlusTreeNode<T>::ll_traverse(vector<BPlusTreeNode<T>*>&ll){
+    int i; 
+    //cout << "Data Count: " << data_count << endl;
+    for (i = 0; i < data_count; i++) { 
+        if (leaf == false) {
+            subset[i]->ll_traverse(ll); 
+        }
+         ll.push_back(this);
+    } 
+  
+    // last child
+    if (leaf == false) {
+        subset[i]->ll_traverse(ll); 
+    }
 }
 
 template <typename T>
@@ -300,7 +395,7 @@ T& BPlusTreeNode<T>::get(const T& entry){
     // First greater than or equal to
     int i = 0; 
     while (i < data_count && entry > data[i]) {
-        //cout << "i: " << i << ", " << entry << endl;
+        if(DEBUG)cout << "i: " << i << ", " << entry << endl;
         i++; 
     }
   
@@ -410,7 +505,7 @@ void BPlusTreeNode<T>::splitChild(int i, BPlusTreeNode *y) {
 
 
 template <typename T>
-void BPlusTreeNode<T>::remove(const T& entry) { 
+bool BPlusTreeNode<T>::remove(const T& entry) { 
     int i = greaterThanOrEqualTo(entry); 
   
     // key present in node
@@ -422,8 +517,8 @@ void BPlusTreeNode<T>::remove(const T& entry) {
     } 
     else{ 
         if (leaf) { 
-            cout << "Key not present" << endl; 
-            return; 
+            cout << "Key Not Found" << endl;
+            return false; 
         } 
 
         bool last_child_flag = ( (i==data_count)? true : false ); 
@@ -439,8 +534,8 @@ void BPlusTreeNode<T>::remove(const T& entry) {
         else{
             subset[i]->remove(entry); 
         }
-    } 
-    return; 
+    }
+    return true; 
 } 
 
 template <typename T>

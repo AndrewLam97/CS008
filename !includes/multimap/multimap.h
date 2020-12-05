@@ -72,7 +72,7 @@ public:
     }
 
 private:
-    map_base bpt{3};
+    map_base bpt;
     int key_count;
 };
 
