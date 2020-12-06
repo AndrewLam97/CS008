@@ -1,7 +1,7 @@
 #ifndef MULTI_MAP_H
 #define MULTI_MAP_H
 
-#include "../b_plus_tree/b_plus_tree.h"
+#include "../bptree/b_plus_tree.h"
 #include "mpair.h"
 using namespace std;
 
@@ -14,11 +14,19 @@ public:
     public:
         friend class MMap;
         Iterator(typename map_base::Iterator it);
-        Iterator operator ++(int unused);
-        Iterator operator ++();
+        Iterator operator ++(int unused){
+            return ++_it;
+        }
+        Iterator operator ++(){
+            return _it++;
+        }
         MPair<K, V> operator *();
-        friend bool operator ==(const Iterator& lhs, const Iterator& rhs);
-        friend bool operator !=(const Iterator& lhs, const Iterator& rhs);
+        friend bool operator ==(const Iterator& lhs, const Iterator& rhs){
+            return(lhs._it == rhs._it);
+        }
+        friend bool operator !=(const Iterator& lhs, const Iterator& rhs){
+            return(lhs._it != rhs._it);
+        }
 
     private:
         typename map_base::Iterator _it;
@@ -27,8 +35,15 @@ public:
     MMap();
 
 //Iterators
-    Iterator begin();
-    Iterator end();
+    Iterator  begin() {return bpt.get_ll().begin();}
+    Iterator end(){return bpt.get_ll().end();}
+    //MMap<K, V>::Iterator lower_bound(T &entry){
+    //    return bpt.find(entry);
+    //}
+    //MMap<K, V>::Iterator upper_bound(T &entry){
+    //    return bpt.find(entry);
+    //}
+
 
 //  Capacity
     int size() const;

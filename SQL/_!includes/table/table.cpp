@@ -18,8 +18,8 @@ int main(){
     //cout << endl << "Dumping table with select_all()..." << endl;
     //t.select_all();
 
-    cout << endl << "Dumping table using insertion operator..." << endl;
-    cout << t;
+    //cout << endl << "Dumping table using insertion operator..." << endl;
+    //cout << t;
 
     cout << endl;
     t.select_field("last");

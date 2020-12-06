@@ -13,8 +13,6 @@
 #include <cassert>
 using namespace std;
 
-static const bool DEBUG = false;
-
 template <class T>
 class BPlusTree;
 
@@ -90,13 +88,16 @@ public:
 
             T operator *(){
                 assert(key_ptr<it->data_count);
+                return ll[key_ptr]->data[0];
             }
 
             Iterator operator++(int un_used){
+                ++key_ptr;
+                return *this;
             }
 
             Iterator operator++(){
-                ++key_ptr;
+                key_ptr++;
                 return *this;
             }
             friend bool operator ==(const Iterator& lhs, const Iterator& rhs){
@@ -133,7 +134,7 @@ public:
     friend ostream& operator<<(ostream& outs, const BPlusTree<T>& print_me){
         return outs;
     }
-
+    vector<BPlusTreeNode<T>*> get_ll(){return ll;}
     int get_ll_size(){return ll.size();}
     int get_size(){return ll.size();}
 
@@ -176,8 +177,8 @@ void BPlusTree<T>::print(){
 
 template <typename T>
 void BPlusTree<T>::print_ll(){
-    if(DEBUG)cout << "ll size: " << ll.size() << endl;
-    if(DEBUG)cout << "Printing ll: ";
+    //if(DEBUG)cout << "ll size: " << ll.size() << endl;
+    //if(DEBUG)cout << "Printing ll: ";
     for(int x = 0; x<ll.size();x++){
         cout << ll[x]->data[0] << " ";
     }
@@ -265,7 +266,7 @@ void BPlusTree<T>::insert(const T& entry){
         size++;
     }
     ll_traverse();
-    if(DEBUG)print_ll();
+    //if(DEBUG)print_ll();
 }
 
 template <typename T>
@@ -395,7 +396,7 @@ T& BPlusTreeNode<T>::get(const T& entry){
     // First greater than or equal to
     int i = 0; 
     while (i < data_count && entry > data[i]) {
-        if(DEBUG)cout << "i: " << i << ", " << entry << endl;
+        //if(DEBUG)cout << "i: " << i << ", " << entry << endl;
         i++; 
     }
   

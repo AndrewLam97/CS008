@@ -36,6 +36,11 @@ int main(){
     mm.erase("Three");
     cout << "Size: " << mm.size() << endl;
 
+    for (MMap<string, string>::Iterator it = mm.lower_bound("One");
+         it != mm.upper_bound("Three") &&
+         it != mm.end(); it++){
+        cout<<*it<<endl;
+    }
 
     system("PAUSE");
     return 0;
