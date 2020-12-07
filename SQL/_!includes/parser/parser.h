@@ -6,6 +6,7 @@
  */
 #ifndef PARSER_H
 #define PARSER_H
+#include <algorithm>
 #include <queue>
 #include <stack>
 #include "../map/map.h"
@@ -39,6 +40,7 @@ public:
 
     //BIG FUNCTIONS
     vector<string> convertToRpn(vector<string> cmdVec);
+    vector<string> convertSimple(vector<string> cmdVec);
 
 private:
     MMap<string, vector<string> >_cmdMap;
@@ -57,6 +59,17 @@ private:
     queue<string> _cmdQueue;
     void generateCmdVec();
 };
+
+vector<string> Parser::convertSimple(vector<string> cmdVec){
+    vector<string> ret;
+    int i = 1;
+    for(i;i<cmdVec.size()&&cmdVec[i]!="from";i++){
+        ret.push_back(cmdVec[i]);
+    }
+    ret.push_back(cmdVec[i+1]);
+    cout << "Returning simp command: " << ret << endl;
+    return ret;
+}
 
 bool is_operator(string s) {if(s=="="||s=="<"||s=="<="||s==">"||s==">=") return true;}
 bool is_special(string s) {if(s=="and"||s=="or") return true;}
@@ -182,6 +195,20 @@ void Parser::generateCmdVec(){
     Token t;
     stk>>t;
     if(t.type_string()=="ALPHA" || t.type_string()=="NUMBER" || t.type_string()=="PUNCTUATION"){
+        if(t.token_str() == "\""){
+            string temp;
+            t=Token();
+            stk>>t;
+            // while(t.token_str()!="\"" && stk.more() && (t.type_string() =="ALPHA" || t.type_string()=="NUMBER")){
+            while(t.token_str()!="\"" && stk.more()){
+                temp+=t.token_str();
+                t=Token();
+                stk>>t;
+            }
+            Token bigToken(temp, 20);
+            cout << "BIGTOKEN STR: " << bigToken.token_str() << endl;
+            _cmdVec.push_back(bigToken.token_str());
+        }
         if(t.token_str() == "<" || t.token_str() == ">"){
             string temp = t.token_str();
             Token t1;
@@ -204,26 +231,24 @@ void Parser::generateCmdVec(){
             //_cmdQueue.push(t.token_str());
             //if(DEBUG) cout << "Token: " << t.token_str() << " ";  
         }
-        else if(t.token_str() == "\""){
+    }
+    while(stk.more()){
+        t = Token();
+        stk>>t;
+        if(t.token_str() == "\""){
             string temp;
             t=Token();
             stk>>t;
-            // while(t.token_str()!="\"" && stk.more() && (t.type_string() =="ALPHA" || t.type_string()=="NUMBER")){
+            //while(t.token_str()!="\"" && stk.more() && (t.type_string() =="ALPHA" || t.type_string()=="NUMBER")){
             while(t.token_str()!="\"" && stk.more()){
                 temp+=t.token_str();
                 t=Token();
                 stk>>t;
             }
             Token bigToken(temp, 20);
-            //cout << "BIGTOKEN STR: " << bigToken.token_str() << endl;
+            cout << "BIGTOKEN STR: " << bigToken.token_str() << endl;
             _cmdVec.push_back(bigToken.token_str());
         }
-        
-              
-    }
-    while(stk.more()){
-        t = Token();
-        stk>>t;
         if(t.token_str() == "<" || t.token_str() == ">"){
             string temp = t.token_str();
             Token t1;
@@ -245,23 +270,10 @@ void Parser::generateCmdVec(){
             if(t.token_str() != "," && t.token_str()!="\"" && (t.token_str()!="<" || t.token_str()!=">")){
                 _cmdVec.push_back(t.token_str());
                 //_cmdQueue.push(t.token_str());
-                //if(DEBUG) cout << "Token: " << t.token_str() << " ";  
+                if(DEBUG) cout << "Token: " << t.token_str() << " ";  
             }
         }
-        else if(t.token_str() == "\""){
-            string temp;
-            t=Token();
-            stk>>t;
-            //while(t.token_str()!="\"" && stk.more() && (t.type_string() =="ALPHA" || t.type_string()=="NUMBER")){
-            while(t.token_str()!="\"" && stk.more()){
-                temp+=t.token_str();
-                t=Token();
-                stk>>t;
-            }
-            Token bigToken(temp, 20);
-            //cout << "BIGTOKEN STR: " << bigToken.token_str() << endl;
-            _cmdVec.push_back(bigToken.token_str());
-        }
+        
         
     }
 }

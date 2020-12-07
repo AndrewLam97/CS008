@@ -32,7 +32,8 @@ public:
 
     friend ostream& operator<<(ostream& outs, Table& t);
 
-    vector<string>get_fieldvec();
+    vector<string> get_fieldvec();
+    vector<string> get_rec(long i);
 
     int get_numberRecs(){
         _size = _table.size();
@@ -151,7 +152,7 @@ Table Table::select(vector<string> fields){
         insertVec.clear();
     }
 
-    //temp.select_all();
+    temp.select_all();
     //cout << "TEMP TABLE: "<< endl << temp << endl;
     //cout << "Done printing table";
     return temp;
@@ -174,7 +175,7 @@ vector<long> Table::select_where_recnos(vector<string>whereStr){
     string key = whereStr[1];
     string cmd = whereStr[2];
 
-    if(cmd == "=="){
+    if(cmd == "="){
         auto ret = _indices[fieldIndex].equal_range(key);
         for(auto it=ret.first;it!=ret.second;++it){
             //cout << "vecIndices--PushBack: " << it->second << endl;
@@ -225,6 +226,10 @@ Table Table::select_where(vector<string>whereStr){
 
 vector<string> Table::get_fieldvec(){
     return _table[0];
+}
+
+vector<string> Table::get_rec(long i){
+    return _table[i];
 }
 
 #endif // TABLE_H
