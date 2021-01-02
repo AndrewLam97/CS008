@@ -84,38 +84,100 @@ public:
     class Iterator{
         public:
             friend class BPlusTree;
-            Iterator(BPlusTree<T>* _it=NULL, int _key_ptr = 0):it(_it), key_ptr(_key_ptr){}
+            explicit Iterator(const BPlusTree bpt):ll(bpt.ll){}
+
+            Iterator(BPlusTreeNode<T>* _it=NULL, int _key_ptr = 0, int _ll_ptr = 0):it(_it), key_ptr(_key_ptr), ll_ptr(_ll_ptr){}
+
+            vector<BPlusTreeNode<T>*> get_ll(BPlusTree bpt){
+                return bpt.get_ll();
+            }
 
             T operator *(){
-                assert(key_ptr<it->data_count);
-                return ll[key_ptr]->data[0];
+                //assert(key_ptr<it->data_count);
+                return it->data[key_ptr];
+            }
+
+            T* operator ->(){
+                T* temp = &it->data[key_ptr];
+                return temp;
             }
 
             Iterator operator++(int un_used){
-                ++key_ptr;
-                return *this;
+                Iterator temp = *this;
+                if(key_ptr+1<it->data_count){
+                    key_ptr++;
+                }
+                else{
+                    key_ptr = 0;
+                    cout << "ll_ptr: " << ll_ptr << endl;
+                    cout << "ll size: " << ll.size() << endl;
+                    it = ll[ll_ptr+1];
+                    ll_ptr++;
+                }
+                return temp;
             }
 
             Iterator operator++(){
-                key_ptr++;
+                if(key_ptr+1<it->data_count){
+                    key_ptr++;
+                }
+                else{
+                    key_ptr = 0;
+                    if(ll_ptr == ll.size()-1){
+                        return nullptr;
+                    }
+                    it = ll[ll_ptr+1];
+                    ll_ptr++;
+                }
                 return *this;
             }
             friend bool operator ==(const Iterator& lhs, const Iterator& rhs){
-                return (lhs==rhs);
+                return (lhs.it == rhs.it && lhs.key_ptr == rhs.key_ptr);
             }
 
             friend bool operator !=(const Iterator& lhs, const Iterator& rhs){
-                return (lhs!=rhs);
+                return (lhs.it!=rhs.it || lhs.key_ptr!=rhs.key_ptr);
             }
             void print_Iterator(){
+                cout << it->data[key_ptr] << "-->";
             }
             bool is_null(){return !it;}
 
-
         private:
-            BPlusTree<T>* it;
+            vector<BPlusTreeNode<T>*> ll;
+            BPlusTreeNode<T>* it;
+            int ll_ptr;
             int key_ptr;
     };
+
+    //using Iterator = typename vector<T>::iterator;
+
+    Iterator begin() {
+        Iterator temp(ll[0],0);
+        return temp;
+    }
+
+    Iterator end(){
+        int ll_size = ll.size();
+        BPlusTreeNode<T>* last = ll[ll_size-1];
+        int last_size = last->data_count;
+        Iterator temp(ll[ll_size-1],last_size-1);
+        return temp;
+    }
+
+    Iterator find(const T& entry){
+
+    }
+
+    Iterator lower_bound(const T& entry){
+
+    }
+    Iterator upper_bound(const T& entry){
+        
+    }
+    Iterator equal_range(const T& entry){
+        
+    }
 
     BPlusTree( int _t=1, bool dups = false);
 
@@ -125,7 +187,7 @@ public:
     void insert(const T& entry);                //insert entry into the tree
     void remove(const T& entry);                //remove entry from the tree
 
-    BPlusTreeNode<T>* find(const T& entry);      //return a pointer to node containing entry
+    BPlusTreeNode<T>* find(T& entry);      //return a pointer to node containing entry
     bool contains(const T& entry);
     T& get(const T& entry);                     //return a reference to entry in the tree
     //T* find(const T& entry);                  //return a pointer to this key. NULL if not there.
@@ -179,6 +241,7 @@ template <typename T>
 void BPlusTree<T>::print_ll(){
     //if(DEBUG)cout << "ll size: " << ll.size() << endl;
     //if(DEBUG)cout << "Printing ll: ";
+    cout << endl;
     for(int x = 0; x<ll.size();x++){
         cout << ll[x]->data[0] << " ";
     }
@@ -201,7 +264,7 @@ void BPlusTree<T>::ll_traverse(){
 }
 
 template <typename T>
-BPlusTreeNode<T>* BPlusTree<T>::find(const T& entry){
+BPlusTreeNode<T>* BPlusTree<T>::find(T& entry){
     if(root != nullptr){
         return root->find(entry);
     }
@@ -363,7 +426,7 @@ void BPlusTreeNode<T>::ll_traverse(vector<BPlusTreeNode<T>*>&ll){
         if (leaf == false) {
             subset[i]->ll_traverse(ll); 
         }
-         ll.push_back(this);
+        ll.push_back(this);
     } 
   
     // last child
@@ -397,7 +460,7 @@ T& BPlusTreeNode<T>::get(const T& entry){
     int i = 0; 
     while (i < data_count && entry > data[i]) {
         //if(DEBUG)cout << "i: " << i << ", " << entry << endl;
-        i++; 
+        i++;
     }
   
     // If found

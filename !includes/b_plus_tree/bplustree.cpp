@@ -43,7 +43,7 @@ int main(){
     cout << endl << endl << "Beginning Manual Test: " << endl;
 
     srand(time(NULL));
-    BPTree bpt1;
+    BPTree<int> bpt1;
 
     char input;
     int key;

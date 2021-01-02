@@ -1,35 +1,31 @@
 #ifndef RECORD_H
 #define RECORD_H
-#include <vector>
-#include <cstring>
+
 #include <iostream>
+#include <string>
 #include <fstream>
-using namespace std;
+#include <cstring>
+//utility functions
+
+bool file_exists(const char filename[]);
+
+void open_fileRW(fstream& f, const char filename[]) throw(char*);
+void open_fileW(fstream& f, const char filename[]);
 class Record{
 public:
     //when you construct a Record, it's either empty or it
     //  contains a word
     Record(){
-        _record[0][0] = NULL;
+        _record[0] = NULL;
         recno = -1;
     }
 
     Record(char str[]){
-        strncpy(_record[0], str, MAX_ROWS);
+        strncpy(_record, str, MAX);
     }
     Record(string s){
-        strncpy(_record[0], s.c_str(), MAX_ROWS);
+        strncpy(_record, s.c_str(), MAX);
     }
-    Record(const vector<string>& vec){
-        for(int i = 0; i < MAX_ROWS; i++){
-            _record[i][0] = NULL;
-        }
-        for(int i = 0; i < vec.size(); i++){
-            strncpy(_record[i],vec[i].c_str(), MAX_ROWS); //check MAX_ROWS??
-        }
-        _numFields = vec.size();
-    }
-
     long write(fstream& outs);              //returns the record number
     long read(fstream& ins, long recno);    //returns the number of bytes
                                             //      read = MAX, or zero if
@@ -39,14 +35,9 @@ public:
     friend ostream& operator<<(ostream& outs,
                                const Record& r);
 private:
-    static const int MAX_ROWS = 20;
-    static const int MAX_COLS = 40;
+    static const int MAX = 500;
     int recno;
-    char _record[MAX_ROWS][MAX_COLS];
-
-    int _numRecords;
-    int _numFields;
-
+    char _record[MAX+1];
 };
 
 long Record::write(fstream &outs){
@@ -59,7 +50,7 @@ long Record::write(fstream &outs){
                                 //      file pointer
 
     //outs.write(&record[0], sizeof(record));
-    outs.write(_record[0], sizeof(_record));
+    outs.write(_record, sizeof(_record));
 
     return pos/sizeof(_record);  //record number
 }
@@ -69,20 +60,68 @@ long Record::read(fstream &ins, long recno){
     ins.seekg(pos, ios_base::beg);
 
 
-    ins.read(_record[0], sizeof(_record));
+    ins.read(_record, sizeof(_record));
     //don't you want to mark the end of  the cstring with null?
     //_record[] => [zero'\0'trash trash trash trash]
     //don't need the null character, but for those of us with OCD and PTSD:
-    _record[0][ins.gcount()] = '\0';
+    _record[ins.gcount()] = '\0';
     return ins.gcount();
 
 }
-
 ostream& operator<<(ostream& outs,
                     const Record& r){
     outs<<r._record;
     return outs;
 }
+//[    |    |     |    |    |     |]
+//-------------------------------------------------
+bool file_exists(const char filename[]){
+    const bool debug = false;
+    fstream ff;
+    ff.open (filename,
+        std::fstream::in | std::fstream::binary );
+    if (ff.fail()){
+        if (debug) cout<<"file_exists(): File does NOT exist: "<<filename<<endl;
+        return false;
+    }
+    if (debug) cout<<"file_exists(): File DOES exist: "<<filename<<endl;
+    ff.close();
+    return true;
+}
 
+void open_fileRW(fstream& f, const char filename[]) throw(char*){
+    const bool debug = false;
+    //openning a nonexistent file for in|out|app causes a fail()
+    //  so, if the file does not exist, create it by openning it for
+    //  output:
+    if (!file_exists(filename)){
+        //create the file
+        f.open(filename, std::fstream::out|std::fstream::binary);
+        if (f.fail()){
+            cout<<"file open (RW) failed: with out|"<<filename<<"]"<<endl;
+            throw("file RW failed  ");
+        }
+        else{
+            if (debug) cout<<"open_fileRW: file created successfully: "<<filename<<endl;
+        }
+    }
+    else{
+        f.open (filename,
+            std::fstream::in | std::fstream::out| std::fstream::binary );
+        if (f.fail()){
+            cout<<"file open (RW) failed. ["<<filename<<"]"<<endl;
+            throw("file failed to open.");
+        }
+    }
+
+}
+void open_fileW(fstream& f, const char filename[]){
+    f.open (filename,
+            std::fstream::out| std::fstream::binary );
+    if (f.fail()){
+        cout<<"file open failed: "<<filename<<endl;
+        throw("file failed to open.");
+    }
+}
 
 #endif // RECORD_H

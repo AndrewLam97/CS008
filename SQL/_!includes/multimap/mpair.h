@@ -1,5 +1,6 @@
 #ifndef MPAIR_H
 #define MPAIR_H
+#include <map>
 #include <vector>
 #include <iostream>
 using namespace std;
@@ -28,9 +29,10 @@ struct MPair{
     }
     MPair(const K& k, const vector<V>& vlist){
         key = k;
-        for(int i = 0; i < vlist.size(); i++){
-            value_list.push_back(vlist[i]);
-        }
+        value_list = vlist;
+        // for(int i = 0; i < vlist.size(); i++){
+        //     value_list.push_back(vlist[i]);
+        // }
     }
     //--------------------------------------------------------------------------------
 
@@ -74,7 +76,11 @@ template <typename T>
 ostream& operator<<(ostream& outs, const vector<T>& v) { 
         outs << "[ ";
         for(int i = 0; i < v.size(); i++){
-            outs << v[i] << " ";
+            outs << v[i];
+            if(i != v.size()-1){
+                cout << " | ";
+            }
+            else cout << " ";
         }
         outs << "]" << endl;
         return outs;

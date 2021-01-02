@@ -6,8 +6,8 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
-#include "../binary_file/binary_file.h"
-#include "../binary_file/Record.h"
+//#include "../binary_file/binary_file.h"
+//#include "../binary_file/Record.h"
 using namespace std;
 
 class Table{
@@ -18,8 +18,6 @@ public:
         _title = "EMPTY";
         _size = 0;
     }
-
-
     Table(string title, const vector<string>& vecFields);
 //MODIFY
     void insert(const vector<string>& insert_me);
@@ -64,7 +62,7 @@ ostream& operator << (ostream& outs, Table& t){
     cout << "TABLE: " << t._title << endl;
     t.select_all();
 }
-
+//CTOR
 Table::Table(string title, const vector<string>& vecFields){
     _title = title;
     _size = 0;
@@ -75,7 +73,7 @@ Table::Table(string title, const vector<string>& vecFields){
         _indices.push_back(temp);
     }
 }
-
+//inserts new row into table
 void Table::insert(const vector<string>& insert_me){
     _table.push_back(insert_me);
     // fstream f;
@@ -93,7 +91,7 @@ void Table::insert(const vector<string>& insert_me){
     //cout << "Table size: " << get_numberRecs() << endl;
     //_size++;
 }
-
+//dumps table
 void Table::select_all(){
     bool printTop = true;
     cout << "Table name: " << _title << ", Records: " << get_numberRecs() << endl;
@@ -110,7 +108,6 @@ void Table::select_all(){
         cout << endl;
     }
 }
-
 
 //Single condition
 void Table::select_field(string field){
@@ -146,7 +143,7 @@ Table Table::select(vector<string> fields){
     for(int i=1;i<_table.size();i++){
         for(int j=0; j<reqFieldsIndices.size();j++){
             insertVec.push_back(_table[i][reqFieldsIndices[j]]);
-            cout << "Adding " << _table[i][reqFieldsIndices[j]] << " to insertVec" << endl;
+            //cout << "Adding " << _table[i][reqFieldsIndices[j]] << " to insertVec" << endl;
         }
         temp.insert(insertVec);
         insertVec.clear();
@@ -158,11 +155,12 @@ Table Table::select(vector<string> fields){
     return temp;
 }
 
+//genereates indice from field string
 int Table::fieldToFieldInt(string s){
     for(int i=0;i<_fieldnames.size();i++){
         if(s == _fieldnames[i]) return i;
     }
-    cout << "fieldToFieldInt: Invalid Field String provided" << endl;
+    //cout << "fieldToFieldInt: Invalid Field String provided" << endl;
     return -1;
 }
 
@@ -182,7 +180,6 @@ vector<long> Table::select_where_recnos(vector<string>whereStr){
             vecIndices.push_back(it->second);
         }
     }
-
     if(cmd == ">"){
         auto ret = _indices[fieldIndex].upper_bound(key);
         for(auto it=ret;it!=_indices[fieldIndex].end();++it){
@@ -224,10 +221,12 @@ Table Table::select_where(vector<string>whereStr){
     return select_where_table;
 }
 
+//returns fields (row 0)
 vector<string> Table::get_fieldvec(){
     return _table[0];
 }
 
+//returns entire record on row i
 vector<string> Table::get_rec(long i){
     return _table[i];
 }

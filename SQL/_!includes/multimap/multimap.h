@@ -35,14 +35,14 @@ public:
     MMap();
 
 //Iterators
-    Iterator  begin() {return bpt.get_ll().begin();}
-    Iterator end(){return bpt.get_ll().end();}
-    //MMap<K, V>::Iterator lower_bound(T &entry){
+    //Iterator  begin() {return bpt.get_ll().begin();}
+    //Iterator end(){return bpt.get_ll().end();}
+    // MMap<K, V>::Iterator lower_bound(T &entry){
     //    return bpt.find(entry);
-    //}
-    //MMap<K, V>::Iterator upper_bound(T &entry){
+    // }
+    // MMap<K, V>::Iterator upper_bound(T &entry){
     //    return bpt.find(entry);
-    //}
+    // }
 
 
 //  Capacity
@@ -55,10 +55,16 @@ public:
 
 //  Modifiers
     void insert(const MPair<K, V> insert_me){
+        if(bpt.contains(insert_me.key)){
+            bpt.remove(insert_me);
+        }
         bpt.insert(insert_me);
         key_count++;
     }
     void insert(const K& k, const V& v){
+        if(bpt.contains(k)){
+            bpt.remove(k);
+        }
         MPair<K, V> tempPair{k, v};
         bpt.insert(tempPair);
         key_count++;
@@ -68,7 +74,7 @@ public:
     void clear();
 
 //  Operations:
-    bool contains(const K& key) const ;
+    bool contains(const K& key);
     vector<V> &get(const K& key);
 
     // Iterator find(const K& key);
@@ -94,23 +100,32 @@ private:
 //--------------------------------------------------------------------------
 
 template <typename K, typename V>
+bool MMap<K, V>::contains(const K& key){
+    return bpt.contains(key);
+}
+
+template <typename K, typename V>
 MMap<K, V>::MMap(){
     key_count = 0;
 }
 
 template <typename K, typename V>
 int MMap<K, V>::size() const{
+    //return m.size();
     return key_count;
 }
 
 template <typename K, typename V>
 bool MMap<K, V>::empty() const{
+    // return m.empty();
     if(key_count == 0) return true;
     else return false;
 }
 
 template <typename K, typename V>
 vector<V>& MMap<K, V>::operator[](const K& key){
+    // typename map<K, V>::const_iterator iter(find(key));
+    //     return iter != this->end() ? iter->second : V();
     vector<V>& v = bpt.get(key).value_list;
     return v;
 }
@@ -120,5 +135,7 @@ void MMap<K, V>::erase(const K& key){
     bpt.remove(key);
     key_count--;
 }
+
+
 
 #endif // MULTI_MAP_H

@@ -39,6 +39,7 @@ public:
     }
 
     //BIG FUNCTIONS
+    //CONVERTS COMMAND VECTOR TO RPN VECTOR
     vector<string> convertToRpn(vector<string> cmdVec);
     vector<string> convertSimple(vector<string> cmdVec);
 
@@ -47,7 +48,7 @@ private:
     void generateCmdMap();
 
     Map<string, int> _adjacencyLookup; //SQL COMMANDS
-    void generateLookup();             //3 for now: SELECT, INSERT, REMOVE
+    void generateLookup();             
 
     static const int MAX_ROWS = 10;
     static const int MAX_COLS = 10;
@@ -60,6 +61,7 @@ private:
     void generateCmdVec();
 };
 
+//CONVERTS CMDVEC TO RPNVEC
 vector<string> Parser::convertSimple(vector<string> cmdVec){
     vector<string> ret;
     int i = 1;
@@ -67,14 +69,16 @@ vector<string> Parser::convertSimple(vector<string> cmdVec){
         ret.push_back(cmdVec[i]);
     }
     ret.push_back(cmdVec[i+1]);
-    cout << "Returning simp command: " << ret << endl;
+    //cout << "Returning simp command: " << ret << endl;
     return ret;
 }
 
+//HELPER FUNCTIONS
 bool is_operator(string s) {if(s=="="||s=="<"||s=="<="||s==">"||s==">=") return true;}
 bool is_special(string s) {if(s=="and"||s=="or") return true;}
 bool is_open_paren(string s){if(s=="(") return true;}
 bool is_closed_paren(string s){if(s==")") return true;}
+
 //returns cmdVec that's RPNd
 vector<string> Parser::convertToRpn(vector<string> cmdVec){
     stack<string> s;
@@ -114,7 +118,7 @@ vector<string> Parser::convertToRpn(vector<string> cmdVec){
     // }
 
     while(i<cmdVec.size()){
-        cout <<  "CURRENT TOKEN: " << cmdVec[i] << endl;
+        //cout <<  "CURRENT TOKEN: " << cmdVec[i] << endl;
         if(!is_operator(cmdVec[i]) && !is_special(cmdVec[i])){
             //cout << "ret add: " << cmdVec[i] << endl;
             ret.push_back(cmdVec[i]);
@@ -158,6 +162,7 @@ vector<string> Parser::convertToRpn(vector<string> cmdVec){
     return ret;
 }
 
+//sets new parser string
 void Parser::set_string(string s){
     _cmd = s;
     generateLookup();
@@ -165,6 +170,7 @@ void Parser::set_string(string s){
     //generateCmdMap();
 }
 
+//enums basically
 void Parser::generateLookup(){
     Map<string, int> temp;
     _adjacencyLookup = temp;
@@ -186,6 +192,7 @@ void Parser::generateAdjacency(int _cmdAdjacency[][MAX_COLS]){
     }
 }
 
+//generate command vector from member input string
 void Parser::generateCmdVec(){
     //if(DEBUG) cout << "Generating cmd vec..." << endl;
     _cmdVec.clear();
@@ -206,9 +213,9 @@ void Parser::generateCmdVec(){
                 stk>>t;
             }
             Token bigToken(temp, 20);
-            cout << "BIGTOKEN STR: " << bigToken.token_str() << endl;
+            //cout << "BIGTOKEN STR: " << bigToken.token_str() << endl;
             _cmdVec.push_back(bigToken.token_str());
-        }
+        } //Checks for <= or >=
         if(t.token_str() == "<" || t.token_str() == ">"){
             string temp = t.token_str();
             Token t1;
@@ -234,21 +241,21 @@ void Parser::generateCmdVec(){
     }
     while(stk.more()){
         t = Token();
-        stk>>t;
-        if(t.token_str() == "\""){
+        stk>>t; 
+        if(t.token_str() == "\""){ //Checks for beginning quote
             string temp;
             t=Token();
             stk>>t;
             //while(t.token_str()!="\"" && stk.more() && (t.type_string() =="ALPHA" || t.type_string()=="NUMBER")){
-            while(t.token_str()!="\"" && stk.more()){
+            while(t.token_str()!="\"" && stk.more()){ //end quote
                 temp+=t.token_str();
                 t=Token();
                 stk>>t;
             }
             Token bigToken(temp, 20);
-            cout << "BIGTOKEN STR: " << bigToken.token_str() << endl;
+            //cout << "BIGTOKEN STR: " << bigToken.token_str() << endl;
             _cmdVec.push_back(bigToken.token_str());
-        }
+        } //Checks for <= or >=
         if(t.token_str() == "<" || t.token_str() == ">"){
             string temp = t.token_str();
             Token t1;
@@ -270,7 +277,7 @@ void Parser::generateCmdVec(){
             if(t.token_str() != "," && t.token_str()!="\"" && (t.token_str()!="<" || t.token_str()!=">")){
                 _cmdVec.push_back(t.token_str());
                 //_cmdQueue.push(t.token_str());
-                if(DEBUG) cout << "Token: " << t.token_str() << " ";  
+                //if(DEBUG) cout << "Token: " << t.token_str() << " ";  
             }
         }
         

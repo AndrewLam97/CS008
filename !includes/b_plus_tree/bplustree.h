@@ -7,7 +7,10 @@ using namespace std;
 
 bool DEBUG = true;
 
-class BPTree; //self explanatory classes
+template <typename T>
+class BPTree;
+
+template <typename T>
 class Node
 {
 private:
@@ -21,6 +24,8 @@ private:
 public:
   Node();
 };
+
+template <typename T>
 class BPTree
 {
   static const int MINIMUM = 1;
@@ -40,17 +45,19 @@ public:
   void cleanUp(Node *);
   ~BPTree();
 };
-
+template <typename T>
 Node::Node()
 {
   //dynamic memory allocation
   key = new int[MAXIMUM];
   ptr = new Node *[MAXIMUM + 1];
 }
+template <typename T>
 BPTree::BPTree()
 {
   root = NULL;
 }
+template <typename T>
 bool BPTree::contains(int x)
 {
   //search logic
@@ -93,6 +100,7 @@ bool BPTree::contains(int x)
     return false;
   }
 }
+template <typename T>
 void BPTree::insert(int x)
 {
   //insert logic
@@ -210,6 +218,7 @@ void BPTree::insert(int x)
     }
   }
 }
+template <typename T>
 void BPTree::insertInternal(int x, Node *cursor, Node *child)
 {
   if (cursor->size < MAXIMUM)
@@ -335,6 +344,7 @@ void BPTree::insertInternal(int x, Node *cursor, Node *child)
     }
   }
 }
+template <typename T>
 Node *BPTree::findParent(Node *cursor, Node *child)
 {
   //finds parent using depth first traversal and ignores leaf nodes as they cannot be parents
@@ -360,6 +370,7 @@ Node *BPTree::findParent(Node *cursor, Node *child)
   }
   return parent;
 }
+template <typename T>
 void BPTree::remove(int x)
 {
   //delete logic
@@ -535,6 +546,7 @@ void BPTree::remove(int x)
     }
   }
 }
+template <typename T>
 void BPTree::removeInternal(int x, Node *cursor, Node *child)
 {
   //deleting the key x first
@@ -720,6 +732,7 @@ void BPTree::removeInternal(int x, Node *cursor, Node *child)
     if(DEBUG)cout << "Merged with right sibling\n";
   }
 }
+template <typename T>
 void BPTree::display(Node *cursor)
 {
   //depth first display
@@ -740,10 +753,12 @@ void BPTree::display(Node *cursor)
     }
   }
 }
+template <typename T>
 Node *BPTree::getRoot()
 {
   return root;
 }
+template <typename T>
 void BPTree::cleanUp(Node *cursor)
 {
   //clean up logic
@@ -765,6 +780,7 @@ void BPTree::cleanUp(Node *cursor)
     delete cursor;
   }
 }
+template <typename T>
 BPTree::~BPTree()
 {
   //calling cleanUp routine
